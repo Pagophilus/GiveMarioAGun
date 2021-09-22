@@ -28,8 +28,8 @@ public class GunController : MonoBehaviour
     {
         if ((auto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0)) && fireCountDown <= 0.0f)
         {
-            gameObject.GetComponentInParent<Platformer.Mechanics.PlayerController>().Bounce(transform.up * -1.0f * recoil);
-            //gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -8.0f, ForceMode2D.Impulse);
+            //gameObject.GetComponentInParent<Platformer.Mechanics.PlayerController>().Bounce(transform.up * -1.0f * recoil);
+            gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -2.0f, ForceMode2D.Impulse);
             Vector2 fireAngle;
             GameObject o;
             for (int i = 0; i < pellets; i++)
