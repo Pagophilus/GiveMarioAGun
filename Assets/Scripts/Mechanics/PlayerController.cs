@@ -27,6 +27,13 @@ namespace Platformer.Mechanics
         protected Rigidbody2D body;
         //--------------------------------------------
 
+        //Slam Animation
+        private float pastYVel =0.0f;
+        private Animator slamAnimator;
+        //LayerMaks
+        [SerializeField] private LayerMask layerMask;
+
+
         /// <summary>
         /// Max horizontal speed of the player.
         /// </summary>
@@ -57,12 +64,14 @@ namespace Platformer.Mechanics
         internal Animator animator;
         readonly PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
+
         public Bounds Bounds => collider2d.bounds;
 
         private int gunIndex = 0;
 
         void Awake()
         {
+            slamAnimator = GameObject.Find("Slam").GetComponent<Animator>();
             body = GetComponent<Rigidbody2D>();
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
@@ -103,6 +112,19 @@ namespace Platformer.Mechanics
                     gun.SetActive(true);
                 }
 
+                //For ground slam animation
+                if(body.velocity.y + pastYVel < -1 && isGrounded())
+                {
+                    slamAnimator.SetBool("shouldSlam", true);
+                    slamAnimator.Play("Slam");
+                } else
+                {
+                    slamAnimator.SetBool("shouldSlam", false);
+                }
+                pastYVel = body.velocity.y;
+
+
+                //Gun animation
                 gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
                 gun.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));                          
             }
@@ -190,8 +212,8 @@ namespace Platformer.Mechanics
         public bool isGrounded()
         {            
             float distToGround = collider2d.bounds.extents.y;
-            var hit = Physics2D.Raycast(transform.position, -Vector2.up, distToGround + 0.2f).collider;
-            //Debug.Log(hit.gameObject.name);
+            var hit = Physics2D.Raycast(transform.position, -Vector2.up, distToGround + 0.2f,layerMask).collider;
+           // Debug.Log(hit.gameObject.name);
             return (hit != null);
         }
 
