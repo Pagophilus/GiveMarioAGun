@@ -26,6 +26,7 @@ public class GunController : MonoBehaviour
     void Start()
     {
         laserLine = GetComponent<LineRenderer>();
+        if(laserLine!=null)
         laserLine.sortingLayerName = "Foreground";
     }
 
