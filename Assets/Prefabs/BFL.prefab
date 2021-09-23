@@ -46,11 +46,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 2008275062895366250, guid: 6f26530875d2bd743839820fff6fc530, type: 3}
+  impactFX: {fileID: 0}
   pellets: 1
   spread: 20
-  recoil: 4
+  recoil: 0
   fireRate: 2
   auto: 0
+  hitscan: 1
   continuous: 1
   randomSpread: 0
 --- !u!120 &4808727916428722507

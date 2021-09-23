@@ -45,11 +45,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 2008275062895366250, guid: 6f26530875d2bd743839820fff6fc530, type: 3}
+  impactFX: {fileID: 0}
   pellets: 14
   spread: 20
-  recoil: 4
+  recoil: 2
   fireRate: 8
   auto: 1
+  hitscan: 0
+  continuous: 0
   randomSpread: 0
 --- !u!1001 &6502427989928769532
 PrefabInstance:
@@ -67,7 +70,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 32c8f55c4e08dc441b0868f095d9646d,
+      objectReference: {fileID: 21300000, guid: c7adb6bc2bbef9742895d40a1226f93c,
         type: 3}
     - target: {fileID: 485209547327725069, guid: 783659ba8cbf76441868ab3e3ad6e1ce,
         type: 3}

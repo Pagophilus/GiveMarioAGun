@@ -23,6 +23,8 @@ namespace Platformer.Mechanics
         /// </summary>
         public float maxSpeed = 7;
 
+        protected Rigidbody2D body;
+
         private bool stopJump;
         /*internal new*/ public Collider2D collider2d;
         /*internal new*/ public AudioSource audioSource;
@@ -46,6 +48,7 @@ namespace Platformer.Mechanics
             collider2d = GetComponent<Collider2D>();
             spriteRenderer = GetComponent<SpriteRenderer>();
             animator = GetComponent<Animator>();
+            body = GetComponent<Rigidbody2D>();
         }
 
 /*        protected override void Start()
@@ -60,6 +63,14 @@ namespace Platformer.Mechanics
 
         protected void Update()
         {
+            Debug.Log("updating bullet");
+            transform.rotation = Quaternion.LookRotation(Vector3.forward, body.velocity.normalized);
+            transform.Rotate(Vector3.forward, -90);
+            if (body.velocity.x > 0)
+            {
+                spriteRenderer.flipY = true;
+            }
+            //transform.rotation = Quaternion.LookRotation(moveVec, Vector3.back);
         }
 
         protected void ComputeVelocity()
@@ -85,6 +96,7 @@ namespace Platformer.Mechanics
                     Schedule<EnemyDeath>().enemy = enemy;
                 }
             }
+            Debug.Log("destroying bullet");
             Destroy(gameObject);
         }
     }

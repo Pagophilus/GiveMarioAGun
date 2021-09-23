@@ -23,12 +23,9 @@ namespace Platformer.Mechanics
         public AudioClip ouchAudio;
         
         //Shit from kinematic-------------------------
-        public bool IsGrounded { get; private set; }
-        protected Vector2 targetVelocity;
         public Vector2 velocity;
         protected Rigidbody2D body;
         //--------------------------------------------
-
 
         /// <summary>
         /// Max horizontal speed of the player.
@@ -49,6 +46,8 @@ namespace Platformer.Mechanics
         public GameObject crosshair;
         public GameObject gun;
 
+        public GameObject[] guns;
+
         float xMover;
 
         bool jump;
@@ -60,46 +59,28 @@ namespace Platformer.Mechanics
 
         public Bounds Bounds => collider2d.bounds;
 
+        private int gunIndex = 0;
+
         void Awake()
         {
             body = GetComponent<Rigidbody2D>();
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
             collider2d = GetComponent<Collider2D>();
+            collider2d.sharedMaterial = new PhysicsMaterial2D();
+
+            collider2d.sharedMaterial.friction = 0.0f;
+            collider2d.enabled = false;
+            collider2d.enabled = true;
             spriteRenderer = GetComponent<SpriteRenderer>();
             animator = GetComponent<Animator>();
         }
 
         protected void Update()
-        {
-            
+        {            
             if (controlEnabled)
             {
-                /*float input = Input.GetAxis("Horizontal");
-                if (input > 0.1f && velocity.x < maxSpeed)
-                {
-                    move.x = velocity.x + 0.02f;
-                } else if (input < -0.1f && velocity.x > 0.0f - maxSpeed)
-                {
-                    move.x = velocity.x - 0.02f;
-                }
-                else
-                {
-                    move.x = 0;
-                }*/
-                xMover = Input.GetAxis("Horizontal");
-                
-                if(body.velocity.x > -maxSpeed && xMover < 0)
-                {
-                    body.AddForce(new Vector2(-1 * maxSpeed, .1f), ForceMode2D.Force);
-                } else if (body.velocity.x < maxSpeed && xMover > 0)
-                {
-                    body.AddForce(new Vector2(1 * maxSpeed, .1f), ForceMode2D.Force);
 
-                }
-
-
-                // Debug.Log(move.x);
                 if (jumpState == JumpState.Grounded && Input.GetButtonDown("Jump"))
                 {
                     jumpState = JumpState.PrepareToJump;
@@ -114,13 +95,20 @@ namespace Platformer.Mechanics
                 worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
                 crosshair.transform.position = worldcoord;
 
-                gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
-                gun.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
+                if (Input.GetMouseButtonDown(1))
+                {
+                    gun.SetActive(false);
+                    gunIndex = (gunIndex + 1) % guns.Length;
+                    gun = guns[gunIndex];
+                    gun.SetActive(true);
+                }
 
-                            
+                gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
+                gun.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));                          
             }
             else
             {
+                Debug.Log("ddd input DISABLED");
                 move.x = 0;
             }
             UpdateJumpState();
@@ -184,7 +172,7 @@ namespace Platformer.Mechanics
             animator.SetFloat("velocityX", Mathf.Abs(body.velocity.x) / maxSpeed);
 
 
-                targetVelocity = move * maxSpeed;
+                //targetVelocity = move * maxSpeed;
 
            // Debug.Log("Y velocity???" + velocity.y);
            // Debug.Log(velocity);
@@ -200,13 +188,13 @@ namespace Platformer.Mechanics
         }
 
         public bool isGrounded()
-        {
-            
+        {            
             float distToGround = collider2d.bounds.extents.y;
             var hit = Physics2D.Raycast(transform.position, -Vector2.up, distToGround + 0.2f).collider;
             //Debug.Log(hit.gameObject.name);
             return (hit != null);
         }
+
         //--------------------------------------------------------------
         public void Teleport(Vector3 position)
         {
@@ -217,78 +205,29 @@ namespace Platformer.Mechanics
 
         public void Bounce(float value)
         {
-            velocity.y = value;
+            body.AddForce(new Vector2(0.0f, value), ForceMode2D.Impulse);
         }
+
         protected virtual void FixedUpdate()
         {
-            //if already falling, fall faster than the jump speed, otherwise use normal gravity.
-            //if (velocity.y < 0)
-              //  velocity += gravityModifier * Physics2D.gravity * Time.deltaTime;
-            //else
-             //   velocity += Physics2D.gravity * Time.deltaTime;
-
-            velocity.x = targetVelocity.x;
-
-            //IsGrounded = false;
-
-            var deltaPosition = velocity * Time.deltaTime;
-
-           // var moveAlongGround = new Vector2(groundNormal.y, -groundNormal.x);
-
-           // var move = moveAlongGround * deltaPosition.x;
-
-            PerformMovement(move, false);
-
-           // move = Vector2.up * deltaPosition.y;
-
-            PerformMovement(move, true);
-
-        }
-        void PerformMovement(Vector2 move, bool yMovement)
-        {
-           // var distance = move.magnitude;
-
-           /* if (distance > minMoveDistance)
+            if (controlEnabled)
             {
-                //check if we hit anything in current direction of travel
-                var count = body.Cast(move, contactFilter, hitBuffer, distance + shellRadius);
-                for (var i = 0; i < count; i++)
-                {
-                    var currentNormal = hitBuffer[i].normal;
+                xMover = Input.GetAxis("Horizontal");
 
-                    //is this surface flat enough to land on?
-                    if (currentNormal.y > minGroundNormalY)
-                    {
-                        IsGrounded = true;
-                        // if moving up, change the groundNormal to new surface normal.
-                        if (yMovement)
-                        {
-                            groundNormal = currentNormal;
-                            currentNormal.x = 0;
-                        }
-                    }
-                    if (IsGrounded)
-                    {
-                        //how much of our velocity aligns with surface normal?
-                        var projection = Vector2.Dot(velocity, currentNormal);
-                        if (projection < 0)
-                        {
-                            //slower velocity if moving against the normal (up a hill).
-                            velocity = velocity - projection * currentNormal;
-                        }
-                    }
-                    else
-                    {
-                        //We are airborne, but hit something, so cancel vertical up and horizontal velocity.
-                        velocity.x *= 0;
-                        velocity.y = Mathf.Min(velocity.y, 0);
-                    }
-                    //remove shellDistance from actual move distance.
-                    var modifiedDistance = hitBuffer[i].distance - shellRadius;
-                    distance = modifiedDistance < distance ? modifiedDistance : distance;
+                Debug.Log("ddd input " + xMover);
+                if (body.velocity.x > -maxSpeed && xMover < -0.1f)
+                {
+                    body.AddForce(new Vector2(-1 * maxSpeed, 0.0f), ForceMode2D.Force);
                 }
-            }*/
-           // body.position = body.position + move.normalized * distance;
+                else if (body.velocity.x < maxSpeed && xMover > 0.1f)
+                {
+                    body.AddForce(new Vector2(1 * maxSpeed, 0.0f), ForceMode2D.Force);
+                }
+                else if (Math.Abs(xMover) < 0.1f)
+                {
+                    body.AddForce(new Vector2(body.velocity.x / -2.0f, 0.0f), ForceMode2D.Force);
+                }
+            }
         }
     }
 }
