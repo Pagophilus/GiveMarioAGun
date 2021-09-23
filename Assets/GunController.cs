@@ -95,12 +95,13 @@ public class GunController : MonoBehaviour
                 fireAngle = transform.up;
                 o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.identity);
                 o.GetComponent<Rigidbody2D>().AddForce(fireAngle * 20.0f, ForceMode2D.Impulse);
+
             }
         }
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void FixedUpdate()
     {
         if (continuous)
         {

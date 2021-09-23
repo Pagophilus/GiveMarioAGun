@@ -28,9 +28,11 @@ namespace Platformer.Mechanics
         //--------------------------------------------
 
         //Slam Animation
-        private float pastYVel =0.0f;
+        private float pastYVel = 0.0f;
         private Animator slamAnimator;
-        //LayerMaks
+        private DateTime lastSlam= DateTime.Now;
+       
+        //LayerMasks
         [SerializeField] private LayerMask layerMask;
 
 
@@ -115,11 +117,10 @@ namespace Platformer.Mechanics
                 //For ground slam animation
                 if(body.velocity.y + pastYVel < -1 && isGrounded())
                 {
-                    slamAnimator.SetBool("shouldSlam", true);
+                    Debug.Log("play slam");
+                    //slamAnimator.SetBool("shouldSlam", true);
                     slamAnimator.Play("Slam");
-                } else
-                {
-                    slamAnimator.SetBool("shouldSlam", false);
+                    lastSlam = DateTime.UtcNow;
                 }
                 pastYVel = body.velocity.y;
 
@@ -212,7 +213,7 @@ namespace Platformer.Mechanics
         public bool isGrounded()
         {            
             float distToGround = collider2d.bounds.extents.y;
-            var hit = Physics2D.Raycast(transform.position, -Vector2.up, distToGround + 0.2f,layerMask).collider;
+            var hit = Physics2D.Raycast(transform.position, -Vector2.up, distToGround + 0.2f, layerMask).collider;
            // Debug.Log(hit.gameObject.name);
             return (hit != null);
         }
