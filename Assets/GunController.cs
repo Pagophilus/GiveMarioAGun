@@ -15,6 +15,9 @@ public class GunController : MonoBehaviour
     public int pellets = 5;
     public float spread = 40.0f;
     public float recoil = 8.0f;
+    /// <summary>
+    /// Bullets per Minute
+    ///  <summary> 
     public float fireRate = 4.0f;
     public bool auto = false;
     public bool hitscan = false;
@@ -105,8 +108,32 @@ public class GunController : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+
+        if (continuous)
+        {
+            if (Input.GetMouseButton(0))
+            {
+                laserLine.enabled = true;
+                shoot();
+            }
+            else
+            {
+                laserLine.enabled = false;
+            }
+        }
+        else if ((auto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0)) && fireCountDown <= 0.0f)
+        {
+            shoot();
+            //fireCountDown = 1.0f / fireRate;  <---BAD VERY BAD
+            fireCountDown = 60.0f / fireRate; //<---GOOD VERY GOOD
+        }
+        fireCountDown -= Time.deltaTime;
+
+    }
     // Update is called once per frame
-    protected virtual void FixedUpdate()
+   /* protected virtual void FixedUpdate()
     {
         if (continuous)
         {
@@ -124,6 +151,6 @@ public class GunController : MonoBehaviour
             shoot();
             fireCountDown = 1.0f / fireRate;
         }
-        fireCountDown -= Time.deltaTime;
-    }
+        //fireCountDown -= Time.deltaTime;
+    }*/
 }

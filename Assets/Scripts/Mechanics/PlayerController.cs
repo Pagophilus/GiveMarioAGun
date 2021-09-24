@@ -30,7 +30,8 @@ namespace Platformer.Mechanics
 
         //Slam Animation
         private float pastYVel = 0.0f;
-        private Animator slamAnimator;
+       // private Animator slamAnimator;
+        public GameObject slamObject;
 
        
         //LayerMasks
@@ -74,7 +75,7 @@ namespace Platformer.Mechanics
         void Awake()
         {
 
-            slamAnimator = GameObject.Find("Slam").GetComponent<Animator>();
+            //slamAnimator = GameObject.Find("Slam").GetComponent<Animator>();
 
             body = GetComponent<Rigidbody2D>();
             health = GetComponent<Health>();
@@ -172,7 +173,7 @@ namespace Platformer.Mechanics
                         jumpState = JumpState.Landed;
                         //Slam animation
                         Instantiate(slamObject, (Vector2)transform.position, Quaternion.identity);
-                        //Instantiate(slamObject, transform);
+                        
 
                     }
                     break;
@@ -186,7 +187,7 @@ namespace Platformer.Mechanics
         {
             if (jump && isGrounded())
             {
-                body.AddForce(new Vector2(0, jumpTakeOffSpeed * model.jumpModifier), ForceMode2D.Force);
+                body.AddForce(new Vector2(0, jumpTakeOffSpeed * model.jumpModifier), ForceMode2D.Impulse);
                 jump = false;
             }
             else if (stopJump)
