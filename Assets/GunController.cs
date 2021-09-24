@@ -77,11 +77,9 @@ public class GunController : MonoBehaviour
             }
         } else
         {
-            //gameObject.GetComponentInParent<Platformer.Mechanics.PlayerController>().Bounce(transform.up * -1.0f * recoil);
-            //gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
             Vector2 fireAngle;
             GameObject o;
-            if (pellets != 1)
+            /*if (pellets != 1)
             {
                 for (int i = 0; i < pellets; i++)
                 {
@@ -96,6 +94,13 @@ public class GunController : MonoBehaviour
                 o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.identity);
                 o.GetComponent<Rigidbody2D>().AddForce(fireAngle * 20.0f, ForceMode2D.Impulse);
 
+            }*/
+
+            for (int i = 0; i < pellets; i++)
+            {
+                fireAngle = Quaternion.Euler(0, 0, spread / 2.0f * (Random.value * 2 - 1)) * transform.up;
+                o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.identity);
+                o.GetComponent<Rigidbody2D>().AddForce(fireAngle * (18 + 4 * Random.value), ForceMode2D.Impulse);
             }
         }
     }

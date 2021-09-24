@@ -63,14 +63,12 @@ namespace Platformer.Mechanics
 
         protected void Update()
         {
-            Debug.Log("updating bullet");
             transform.rotation = Quaternion.LookRotation(Vector3.forward, body.velocity.normalized);
             transform.Rotate(Vector3.forward, -90);
             if (body.velocity.x > 0)
             {
                 spriteRenderer.flipY = true;
             }
-            //transform.rotation = Quaternion.LookRotation(moveVec, Vector3.back);
         }
 
         protected void ComputeVelocity()
@@ -96,7 +94,6 @@ namespace Platformer.Mechanics
                     Schedule<EnemyDeath>().enemy = enemy;
                 }
             }
-            Debug.Log("destroying bullet");
             Destroy(gameObject);
         }
     }

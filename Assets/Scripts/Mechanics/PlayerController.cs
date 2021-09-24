@@ -30,7 +30,6 @@ namespace Platformer.Mechanics
         //Slam Animation
         private float pastYVel = 0.0f;
         private Animator slamAnimator;
-        private DateTime lastSlam= DateTime.Now;
        
         //LayerMasks
         [SerializeField] private LayerMask layerMask;
@@ -91,7 +90,6 @@ namespace Platformer.Mechanics
         {            
             if (controlEnabled)
             {
-
                 if (jumpState == JumpState.Grounded && Input.GetButtonDown("Jump"))
                 {
                     jumpState = JumpState.PrepareToJump;
@@ -115,15 +113,14 @@ namespace Platformer.Mechanics
                 }
 
                 //For ground slam animation
-                if(body.velocity.y + pastYVel < -1 && isGrounded())
+ /*               if(body.velocity.y < -1 && isGrounded())
                 {
                     Debug.Log("play slam");
                     //slamAnimator.SetBool("shouldSlam", true);
                     slamAnimator.Play("Slam");
                     lastSlam = DateTime.UtcNow;
                 }
-                pastYVel = body.velocity.y;
-
+                pastYVel = body.velocity.y;*/
 
                 //Gun animation
                 gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
@@ -131,7 +128,6 @@ namespace Platformer.Mechanics
             }
             else
             {
-                Debug.Log("ddd input DISABLED");
                 move.x = 0;
             }
             UpdateJumpState();
@@ -144,6 +140,13 @@ namespace Platformer.Mechanics
             jump = false;
             switch (jumpState)
             {
+                case JumpState.Grounded:
+                    if (!isGrounded())
+                    {
+                        Schedule<PlayerJumped>().player = this;
+                        jumpState = JumpState.InFlight;
+                    }
+                    break;
                 case JumpState.PrepareToJump:
                     jumpState = JumpState.Jumping;
                     jump = true;
@@ -161,6 +164,9 @@ namespace Platformer.Mechanics
                     {
                         Schedule<PlayerLanded>().player = this;
                         jumpState = JumpState.Landed;
+
+                        Debug.Log("play slam");
+                        slamAnimator.Play("Slam");
                     }
                     break;
                 case JumpState.Landed:
@@ -173,8 +179,7 @@ namespace Platformer.Mechanics
         {
             if (jump && isGrounded())
             {
-                body.AddForce(new Vector2(0,jumpTakeOffSpeed * model.jumpModifier),ForceMode2D.Impulse);
-                //velocity.y = jumpTakeOffSpeed * model.jumpModifier;
+                body.AddForce(new Vector2(0, jumpTakeOffSpeed * model.jumpModifier), ForceMode2D.Force);
                 jump = false;
             }
             else if (stopJump)
@@ -193,12 +198,6 @@ namespace Platformer.Mechanics
 
             animator.SetBool("grounded", isGrounded());
             animator.SetFloat("velocityX", Mathf.Abs(body.velocity.x) / maxSpeed);
-
-
-                //targetVelocity = move * maxSpeed;
-
-           // Debug.Log("Y velocity???" + velocity.y);
-           // Debug.Log(velocity);
         }
 
         public enum JumpState
