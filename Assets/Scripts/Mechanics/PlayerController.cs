@@ -29,6 +29,18 @@ namespace Platformer.Mechanics
         protected Rigidbody2D body;
         //--------------------------------------------
 
+<<<<<<< Updated upstream
+=======
+        //Slam Animation
+       //private float pastYVel = 0.0f;
+        //private Animator slamAnimator;
+       //private DateTime lastSlam= DateTime.Now;
+        public GameObject slamObject;
+       
+        //LayerMasks
+        [SerializeField] private LayerMask layerMask;
+
+>>>>>>> Stashed changes
 
         /// <summary>
         /// Max horizontal speed of the player.
@@ -62,6 +74,10 @@ namespace Platformer.Mechanics
 
         void Awake()
         {
+<<<<<<< Updated upstream
+=======
+            //slamAnimator = GameObject.Find("Slam").GetComponent<Animator>();
+>>>>>>> Stashed changes
             body = GetComponent<Rigidbody2D>();
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
@@ -114,6 +130,21 @@ namespace Platformer.Mechanics
                 worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
                 crosshair.transform.position = worldcoord;
 
+<<<<<<< Updated upstream
+=======
+                if (Input.GetMouseButtonDown(1))
+                {
+                    gun.SetActive(false);
+                    gunIndex = (gunIndex + 1) % guns.Length;
+                    gun = guns[gunIndex];
+                    gun.SetActive(true);
+                }
+
+                
+
+
+                //Gun animation
+>>>>>>> Stashed changes
                 gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
                 gun.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
 
@@ -150,6 +181,8 @@ namespace Platformer.Mechanics
                     {
                         Schedule<PlayerLanded>().player = this;
                         jumpState = JumpState.Landed;
+                        Instantiate(slamObject, (Vector2)transform.position, Quaternion.identity);
+                        //Instantiate(slamObject, transform);
                     }
                     break;
                 case JumpState.Landed:
