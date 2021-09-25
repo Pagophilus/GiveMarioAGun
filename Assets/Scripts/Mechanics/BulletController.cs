@@ -84,10 +84,6 @@ namespace Platformer.Mechanics
                 if (enemyHealth != null)
                 {
                     enemyHealth.Decrement();
-                    if (!enemyHealth.IsAlive)
-                    {
-                        Schedule<EnemyDeath>().enemy = enemy;
-                    }
                 }
                 else
                 {

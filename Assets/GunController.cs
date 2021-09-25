@@ -6,144 +6,161 @@ using static Platformer.Mechanics.PlayerController;
 using static Platformer.Mechanics.EnemyController;
 using static Platformer.Gameplay.EnemyDeath;
 using  Platformer.Gameplay;
+using static Platformer.Core.Simulation;
 
-public class GunController : MonoBehaviour
+namespace Platformer.Mechanics
 {
-    public GameObject bullet;
-    public GameObject impactFX;
-
-    public int pellets = 5;
-    public int burstCount = 1;
-    public float burstGap = 0.25f;
-    public float spread = 40.0f;
-    public float recoil = 8.0f;
-    /// <summary>
-    /// Bullets per Minute
-    ///  <summary> 
-    public float fireRate = 4.0f;
-    public bool auto = false;
-    public bool hitscan = false;
-    public bool continuous = false;
-    public bool randomSpread = false;
-    private LineRenderer laserLine;                                        // Reference to the LineRenderer component which will display our laserline
-
-    private float fireCountDown = -1.0f;
-
-    // Start is called before the first frame update
-    void Start()
+    public class GunController : MonoBehaviour
     {
-        laserLine = GetComponent<LineRenderer>();
-        if (laserLine != null)
+        public GameObject bullet;
+        public GameObject impactFX;
+
+        public int pellets = 5;
+        public int burstCount = 1;
+        public float burstGap = 0.25f;
+        public float spread = 40.0f;
+        public float recoil = 8.0f;
+        public int magazineCap = 10;
+        private int magazine = 10;
+
+        private HUDController hud;
+
+        /// <summary>
+        /// Bullets per Minute
+        ///  <summary> 
+        public float fireRate = 4.0f;
+        public bool auto = false;
+        public bool hitscan = false;
+        public bool continuous = false;
+        public bool randomSpread = false;
+        private LineRenderer laserLine;                                        // Reference to the LineRenderer component which will display our laserline
+
+        private float fireCountDown = -1.0f;
+
+        // Start is called before the first frame update
+        void Start()
         {
-            laserLine.sortingLayerName = "Foreground";
-        }
-    }
-
-
-    IEnumerator shoot()
-    {
-        //gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
-
-        if (hitscan)
-        {
-            gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
-
-            // Declare a raycast hit to store information about what our raycast has hit
-            RaycastHit2D hit;
-
-            // Set the start position for our visual effect for our laser to the position of gunEnd
+            laserLine = GetComponent<LineRenderer>();
             if (laserLine != null)
             {
-                laserLine.SetPosition(0, transform.position + transform.up * 0.5f);
+                laserLine.sortingLayerName = "Foreground";
             }
+            magazine = magazineCap;
+            hud.UpdateAmmo(magazine, magazineCap);
+        }
 
-            Debug.Log("getting hits");
-            // Check if our raycast has hit anything
-            hit = Physics2D.Raycast(transform.position + transform.up * 0.5f, transform.up, 100.0f);
-            if (hit.collider != null)
-            {
-                //Debug.Log("hit found: " + hit.point.x + " " + hit.point.y + " " + hit.collider.gameObject.name);
-
-                if (laserLine != null)
-                {
-                    // Set the end position for our laser line 
-                    laserLine.SetPosition(1, hit.point);
-                }
-
-                Instantiate(impactFX, hit.point + (Vector2)transform.up * -0.02f, Quaternion.LookRotation(hit.normal));
-            }
-            else
-            {
-                Debug.Log("no hit found: ");
-
-                if (laserLine != null)
-                {
-                    // If we did not hit anything, set the end of the line to a position directly in front of the camera at the distance of weaponRange
-                    laserLine.SetPosition(1, transform.position + transform.up * 50.0f);
-                }
-            }
-        } else
+        void Awake()
         {
-            Vector2 fireAngle;
-            GameObject o;
+            hud = GameObject.Find("Hud").GetComponent<HUDController>();
+        }
 
-            for (int h = 0; h < burstCount; h++)
+        void OnEnable()
+        {
+            hud.UpdateAmmo(magazine, magazineCap);
+        }
+
+        public void RefillAmmo()
+        {
+            magazine = magazineCap;
+            hud.UpdateAmmo(magazine, magazineCap);
+        }
+
+
+
+        IEnumerator shoot()
+        {
+            //gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
+            magazine--;
+            hud.UpdateAmmo(magazine, magazineCap);
+            if (hitscan)
             {
                 gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
-                for (int i = 0; i < pellets; i++)
+
+                // Declare a raycast hit to store information about what our raycast has hit
+                RaycastHit2D hit;
+
+                // Set the start position for our visual effect for our laser to the position of gunEnd
+                if (laserLine != null)
                 {
-                    fireAngle = Quaternion.Euler(0, 0, spread / 2.0f * (Random.value * 2 - 1)) * transform.up;
-                    o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.identity);
-                    o.GetComponent<Rigidbody2D>().AddForce(fireAngle * (18 + 4 * Random.value), ForceMode2D.Impulse);
+                    laserLine.SetPosition(0, transform.position + transform.up * 0.5f);
                 }
-                yield return new WaitForSeconds(burstGap);
-            }
-        }
-    }
 
-    void Update()
-    {
+                Debug.Log("getting hits");
+                // Check if our raycast has hit anything
+                hit = Physics2D.Raycast(transform.position + transform.up * 0.5f, transform.up, 100.0f);
+                if (hit.collider != null)
+                {
+                    //Debug.Log("hit found: " + hit.point.x + " " + hit.point.y + " " + hit.collider.gameObject.name);
 
-        if (continuous)
-        {
-            if (Input.GetMouseButton(0))
-            {
-                laserLine.enabled = true;
-                shoot();
+                    if (laserLine != null)
+                    {
+                        // Set the end position for our laser line 
+                        laserLine.SetPosition(1, hit.point);
+                    }
+
+                    var enemy = hit.collider.gameObject.GetComponent<EnemyController>();
+                    if (enemy != null)
+                    {
+                        var enemyHealth = enemy.GetComponent<Health>();
+                        if (enemyHealth != null)
+                        {
+                            enemyHealth.Decrement();
+                        }
+                    }
+                    Instantiate(impactFX, hit.point + (Vector2)transform.up * -0.02f, Quaternion.LookRotation(hit.normal));
+                }
+                else
+                {
+                    Debug.Log("no hit found: ");
+
+                    if (laserLine != null)
+                    {
+                        // If we did not hit anything, set the end of the line to a position directly in front of the camera at the distance of weaponRange
+                        laserLine.SetPosition(1, transform.position + transform.up * 50.0f);
+                    }
+                }
             }
             else
             {
-                laserLine.enabled = false;
-            }
-        }
-        else if ((auto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0)) && fireCountDown <= 0.0f)
-        {
-            shoot();
-            //fireCountDown = 1.0f / fireRate;  <---BAD VERY BAD
-            fireCountDown = 60.0f / fireRate; //<---GOOD VERY GOOD
-        }
-        fireCountDown -= Time.deltaTime;
+                Vector2 fireAngle;
+                GameObject o;
 
-    }
-    // Update is called once per frame
-   /* protected virtual void FixedUpdate()
-    {
-        if (continuous)
-        {
-            if (Input.GetMouseButton(0))
-            {
-                laserLine.enabled = true;
-                StartCoroutine(shoot());
-            } else
-            {
-                laserLine.enabled = false;
+                for (int h = 0; h < burstCount; h++)
+                {
+                    gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
+                    for (int i = 0; i < pellets; i++)
+                    {
+                        fireAngle = Quaternion.Euler(0, 0, spread / 2.0f * (Random.value * 2 - 1)) * transform.up;
+                        o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.identity);
+                        o.GetComponent<Rigidbody2D>().AddForce(fireAngle * (18 + 4 * Random.value), ForceMode2D.Impulse);
+                    }
+                    yield return new WaitForSeconds(burstGap);
+                }
             }
         }
-        else if ((auto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0)) && fireCountDown <= 0.0f)
+
+        void Update()
         {
-            StartCoroutine(shoot());
-            fireCountDown = 1.0f / fireRate;
+            if (continuous)
+            {
+                if (Input.GetMouseButton(0) && magazine > 0)
+                {
+                    laserLine.enabled = true;
+                    StartCoroutine(shoot());
+                }
+                else
+                {
+                    laserLine.enabled = false;
+                }
+            }
+            else if ((auto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0)) && fireCountDown <= 0.0f && magazine > 0)
+            {
+                StartCoroutine(shoot());
+                //fireCountDown = 1.0f / fireRate;  <---BAD VERY BAD
+                fireCountDown = 60.0f / fireRate; //<---GOOD VERY GOOD
+            }
+            fireCountDown -= Time.deltaTime;
+
         }
-        //fireCountDown -= Time.deltaTime;
-    }*/
+    }
 }

@@ -10,6 +10,9 @@ namespace Platformer.Mechanics
         private Image image;
         private List<GameObject> gunsList = new List<GameObject>();
         public GameObject imagePrefab;
+        
+        // TODO(grantcarlson): make this private.
+        public GameObject ammoText;
         private GameObject newImage;
         public Sprite border;
 
@@ -17,8 +20,9 @@ namespace Platformer.Mechanics
 
         private void Awake()
         {
-            
+            ammoText = GameObject.Find("AmmoText");
         }
+
         void Start()
         {
            
@@ -61,6 +65,18 @@ namespace Platformer.Mechanics
             rtb.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, -40 + (50 * player.gunIndex), 120);
             newBorder.GetComponent<Image>().overrideSprite = border;
             gunsList.Add(newBorder);
+        }
+
+        public void UpdateAmmo(int magazine, int magazineCap)
+        {
+            if (magazine == 0)
+            {
+                ammoText.GetComponent<Text>().color = Color.red;
+            } else
+            {
+                ammoText.GetComponent<Text>().color = new Color32(255, 0, 255, 200);
+            }
+            ammoText.GetComponent<Text>().text = magazine + "/" + magazineCap;
         }
     }
 }

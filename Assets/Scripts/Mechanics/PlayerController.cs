@@ -23,18 +23,15 @@ namespace Platformer.Mechanics
         public AudioClip ouchAudio;
         
         //Shit from kinematic-------------------------
-        public Vector2 velocity;
+        //public Vector2 velocity;
         protected Rigidbody2D body;
         //HUD Stuff--------------------------------------------
-        public HUDController hud;
-        public float ammo;
-        public float ammoCap;
+        private HUDController hud;
 
         //Slam Animation
         private float pastYVel = 0.0f;
         public GameObject slamObject;
-
-       
+  
         //LayerMasks
         [SerializeField] private LayerMask layerMask;
 
@@ -47,15 +44,15 @@ namespace Platformer.Mechanics
         /// </summary>
         public float jumpTakeOffSpeed = 7;
 
-        public JumpState jumpState = JumpState.Grounded;
+        private JumpState jumpState = JumpState.Grounded;
         private bool stopJump;
-        /*internal new*/ public Collider2D collider2d;
-        /*internal new*/ public AudioSource audioSource;
-        public Health health;
-        public bool controlEnabled = true;
+        private Collider2D collider2d;
+        private AudioSource audioSource;
+        protected Health health;
+        private bool controlEnabled = true;
 
-        public GameObject crosshair;
-        public GameObject gun;
+        private GameObject crosshair;
+        private GameObject gun;
 
         public GameObject[] guns;
 
@@ -64,10 +61,8 @@ namespace Platformer.Mechanics
         bool jump;
         Vector2 move;
         SpriteRenderer spriteRenderer;
-        public SpriteRenderer gunSprite;
         internal Animator animator;
         readonly PlatformerModel model = Simulation.GetModel<PlatformerModel>();
-
 
         public Bounds Bounds => collider2d.bounds;
 
@@ -75,24 +70,17 @@ namespace Platformer.Mechanics
 
         void Awake()
         {
-
-            //slamAnimator = GameObject.Find("Slam").GetComponent<Animator>();
-
             body = GetComponent<Rigidbody2D>();
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
             collider2d = GetComponent<Collider2D>();
-            collider2d.sharedMaterial = new PhysicsMaterial2D();
-
-            collider2d.sharedMaterial.friction = 0.0f;
-            collider2d.enabled = false;
-            collider2d.enabled = true;
             spriteRenderer = GetComponent<SpriteRenderer>();
             animator = GetComponent<Animator>();
             hud = GameObject.Find("Hud").GetComponent<HUDController>();
+            crosshair = GameObject.Find("Donut");
             hud.UpdateHUD(this);
+            gun = guns[gunIndex];
         }
-
 
         protected void Update()
         {            
@@ -121,19 +109,6 @@ namespace Platformer.Mechanics
                     hud.UpdateHUD(this);
                 }
 
-                gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
-                gun.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
-
-
-                //For ground slam animation
- /*               if(body.velocity.y < -1 && isGrounded())
-                {
-                    Debug.Log("play slam");
-                    //slamAnimator.SetBool("shouldSlam", true);
-                    slamAnimator.Play("Slam");
-                }
-                pastYVel = body.velocity.y;*/
-
                 //Gun animation
                 gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
                 gun.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));                          
@@ -144,8 +119,6 @@ namespace Platformer.Mechanics
             }
             UpdateJumpState();
             ComputeVelocity();
-
-            //base.Update();
         }
 
         void UpdateJumpState()
@@ -156,7 +129,8 @@ namespace Platformer.Mechanics
                 case JumpState.Grounded:
                     if (!isGrounded())
                     {
-                        Schedule<PlayerJumped>().player = this;
+                        if (audioSource && jumpAudio)
+                            audioSource.PlayOneShot(jumpAudio);
                         jumpState = JumpState.InFlight;
                     }
                     break;
@@ -168,7 +142,8 @@ namespace Platformer.Mechanics
                 case JumpState.Jumping:
                     if (!isGrounded())
                     {
-                        Schedule<PlayerJumped>().player = this;
+                        if (audioSource && jumpAudio)
+                            audioSource.PlayOneShot(jumpAudio);
                         jumpState = JumpState.InFlight;
                     }
                     break;
@@ -177,10 +152,9 @@ namespace Platformer.Mechanics
                     {
                         Schedule<PlayerLanded>().player = this;
                         jumpState = JumpState.Landed;
+                        gun.GetComponent<GunController>().RefillAmmo();
                         //Slam animation
                         Instantiate(slamObject, (Vector2)transform.position, Quaternion.identity);
-                        
-
                     }
                     break;
                 case JumpState.Landed:
@@ -199,10 +173,10 @@ namespace Platformer.Mechanics
             else if (stopJump)
             {
                 stopJump = false;
-                if (velocity.y > 0)
+                /*if (velocity.y > 0)
                 {
                     velocity.y = velocity.y * model.jumpDeceleration;
-                }
+                }*/
             }
 
             if (xMover > 0.01f) 
@@ -235,7 +209,6 @@ namespace Platformer.Mechanics
         public void Teleport(Vector3 position)
         {
             body.position = position;
-            velocity *= 0;
             body.velocity *= 0;
         }
 
@@ -249,8 +222,6 @@ namespace Platformer.Mechanics
             if (controlEnabled)
             {
                 xMover = Input.GetAxis("Horizontal");
-
-                Debug.Log("ddd input " + xMover);
                 if (body.velocity.x > -maxSpeed && xMover < -0.1f)
                 {
                     body.AddForce(new Vector2(-1 * maxSpeed, 0.0f), ForceMode2D.Force);
@@ -264,6 +235,46 @@ namespace Platformer.Mechanics
                     body.AddForce(new Vector2(body.velocity.x / -2.0f, 0.0f), ForceMode2D.Force);
                 }
             }
+        }
+
+        public void Spawn()
+        {
+            collider2d.enabled = true;
+            controlEnabled = false;
+            if (audioSource && respawnAudio)
+                audioSource.PlayOneShot(respawnAudio);
+            health.Increment();
+            Teleport(model.spawnPoint.transform.position);
+            jumpState = PlayerController.JumpState.Grounded;
+            animator.SetBool("dead", false);
+            model.virtualCamera.m_Follow = transform;
+            model.virtualCamera.m_LookAt = transform;
+            Simulation.Schedule<EnablePlayerInput>(2f);
+        }
+
+        public void Die()
+        {
+            if (health.IsAlive)
+            {
+                health.Die();
+                model.virtualCamera.m_Follow = null;
+                model.virtualCamera.m_LookAt = null;
+                // player.collider.enabled = false;
+                controlEnabled = false;
+
+                if (audioSource && ouchAudio)
+                {
+                    audioSource.PlayOneShot(ouchAudio);
+                }
+                animator.SetTrigger("hurt");
+                animator.SetBool("dead", true);
+                Simulation.Schedule<PlayerSpawn>(2);
+            }
+        }
+
+        public void EnableControl(bool enabled)
+        {
+            controlEnabled = enabled;
         }
     }
 }
