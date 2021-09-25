@@ -27,13 +27,15 @@ namespace Platformer.Mechanics
         protected Rigidbody2D body;
         //--------------------------------------------
 
+
         //Slam Animation
         private float pastYVel = 0.0f;
-        private Animator slamAnimator;
+       // private Animator slamAnimator;
+        public GameObject slamObject;
+
        
         //LayerMasks
         [SerializeField] private LayerMask layerMask;
-
 
         /// <summary>
         /// Max horizontal speed of the player.
@@ -72,7 +74,9 @@ namespace Platformer.Mechanics
 
         void Awake()
         {
-            slamAnimator = GameObject.Find("Slam").GetComponent<Animator>();
+
+            //slamAnimator = GameObject.Find("Slam").GetComponent<Animator>();
+
             body = GetComponent<Rigidbody2D>();
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
@@ -112,13 +116,16 @@ namespace Platformer.Mechanics
                     gun.SetActive(true);
                 }
 
+                gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
+                gun.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
+
+
                 //For ground slam animation
  /*               if(body.velocity.y < -1 && isGrounded())
                 {
                     Debug.Log("play slam");
                     //slamAnimator.SetBool("shouldSlam", true);
                     slamAnimator.Play("Slam");
-                    lastSlam = DateTime.UtcNow;
                 }
                 pastYVel = body.velocity.y;*/
 
@@ -164,9 +171,10 @@ namespace Platformer.Mechanics
                     {
                         Schedule<PlayerLanded>().player = this;
                         jumpState = JumpState.Landed;
+                        //Slam animation
+                        Instantiate(slamObject, (Vector2)transform.position, Quaternion.identity);
+                        
 
-                        Debug.Log("play slam");
-                        slamAnimator.Play("Slam");
                     }
                     break;
                 case JumpState.Landed:
@@ -179,7 +187,7 @@ namespace Platformer.Mechanics
         {
             if (jump && isGrounded())
             {
-                body.AddForce(new Vector2(0, jumpTakeOffSpeed * model.jumpModifier), ForceMode2D.Force);
+                body.AddForce(new Vector2(0, jumpTakeOffSpeed * model.jumpModifier), ForceMode2D.Impulse);
                 jump = false;
             }
             else if (stopJump)
