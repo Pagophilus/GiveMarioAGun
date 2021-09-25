@@ -25,12 +25,13 @@ namespace Platformer.Mechanics
         //Shit from kinematic-------------------------
         public Vector2 velocity;
         protected Rigidbody2D body;
-        //--------------------------------------------
-
+        //HUD Stuff--------------------------------------------
+        public HUDController hud;
+        public float ammo;
+        public float ammoCap;
 
         //Slam Animation
         private float pastYVel = 0.0f;
-       // private Animator slamAnimator;
         public GameObject slamObject;
 
        
@@ -70,7 +71,7 @@ namespace Platformer.Mechanics
 
         public Bounds Bounds => collider2d.bounds;
 
-        private int gunIndex = 0;
+        public int gunIndex = 0;
 
         void Awake()
         {
@@ -88,7 +89,10 @@ namespace Platformer.Mechanics
             collider2d.enabled = true;
             spriteRenderer = GetComponent<SpriteRenderer>();
             animator = GetComponent<Animator>();
+            hud = GameObject.Find("Hud").GetComponent<HUDController>();
+            hud.UpdateHUD(this);
         }
+
 
         protected void Update()
         {            
@@ -114,6 +118,7 @@ namespace Platformer.Mechanics
                     gunIndex = (gunIndex + 1) % guns.Length;
                     gun = guns[gunIndex];
                     gun.SetActive(true);
+                    hud.UpdateHUD(this);
                 }
 
                 gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
@@ -139,6 +144,7 @@ namespace Platformer.Mechanics
             }
             UpdateJumpState();
             ComputeVelocity();
+
             //base.Update();
         }
 
