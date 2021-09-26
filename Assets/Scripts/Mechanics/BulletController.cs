@@ -64,12 +64,11 @@ namespace Platformer.Mechanics
                     Schedule<EnemyDeath>().enemy = enemy;
                 }
             }
-            Debug.Log("HEY");
-            if(explosion != null)
-            Instantiate(explosion, (Vector2)transform.position, Quaternion.identity);
-            destroy = true;
-            
-            
+            if (explosion != null)
+            { 
+                Instantiate(explosion, (Vector2)transform.position, Quaternion.identity);
+            }
+            destroy = true;            
         }
     }
 }

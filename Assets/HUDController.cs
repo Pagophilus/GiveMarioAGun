@@ -36,15 +36,11 @@ namespace Platformer.Mechanics
 
         public void UpdateHUD(PlayerController player)
         {
-            Debug.Log("Updatin Hub");
             foreach(GameObject n in gunsList)
             {
                 GameObject.Destroy(n);
             }
             gunsList.Clear(); 
-
-            //player.guns[0].GetComponentInChildren<SpriteRenderer>().sprite
-            //image.overrideSprite = player.guns[0].GetComponentInChildren<SpriteRenderer>().sprite;
            
             for(int i = 0; i<player.guns.Length; i++) {
 

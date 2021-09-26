@@ -36,7 +36,12 @@ namespace Platformer.Mechanics
         /// </summary>
         public void Decrement()
         {
-            currentHP = Mathf.Clamp(currentHP - 1, 0, maxHP);
+            Damage(1);
+        }
+
+        public void Damage(int damage)
+        {
+            currentHP = Mathf.Clamp(currentHP - damage, 0, maxHP);
             if (currentHP == 0)
             {
                 var enemy = gameObject.GetComponent<EnemyController>();

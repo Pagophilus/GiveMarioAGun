@@ -37,7 +37,7 @@ namespace Platformer.Mechanics
             var player = collision.gameObject.GetComponent<PlayerController>();
             if (player != null)
             {
-                //Debug.Log("PlayerCollided");
+                Debug.Log("PlayerCollided " + collision.gameObject.name);
 
                 var ev = Schedule<PlayerEnemyCollision>();
                 ev.player = player;

@@ -29,6 +29,7 @@ namespace Platformer.Mechanics
         /// Bullets per Minute
         ///  <summary> 
         public float fireRate = 4.0f;
+        public bool melee = false;
         public bool auto = false;
         public bool hitscan = false;
         public bool continuous = false;
@@ -65,8 +66,6 @@ namespace Platformer.Mechanics
             hud.UpdateAmmo(magazine, magazineCap);
         }
 
-
-
         IEnumerator shoot()
         {
             //gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
@@ -76,9 +75,6 @@ namespace Platformer.Mechanics
             {
                 gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
 
-                // Declare a raycast hit to store information about what our raycast has hit
-                RaycastHit2D hit;
-
                 // Set the start position for our visual effect for our laser to the position of gunEnd
                 if (laserLine != null)
                 {
@@ -87,7 +83,7 @@ namespace Platformer.Mechanics
 
                 Debug.Log("getting hits");
                 // Check if our raycast has hit anything
-                hit = Physics2D.Raycast(transform.position + transform.up * 0.5f, transform.up, 100.0f);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * 0.5f, transform.up, 100.0f);
                 if (hit.collider != null)
                 {
                     //Debug.Log("hit found: " + hit.point.x + " " + hit.point.y + " " + hit.collider.gameObject.name);
@@ -128,11 +124,22 @@ namespace Platformer.Mechanics
                 for (int h = 0; h < burstCount; h++)
                 {
                     gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
-                    for (int i = 0; i < pellets; i++)
+                    if (melee)
                     {
-                        fireAngle = Quaternion.Euler(0, 0, spread / 2.0f * (Random.value * 2 - 1)) * transform.up;
-                        o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.identity);
-                        o.GetComponent<Rigidbody2D>().AddForce(fireAngle * (18 + 4 * Random.value), ForceMode2D.Impulse);
+                        GetComponent<CapsuleCollider2D>().enabled = true;
+                        transform.localScale += new Vector3(0, 0.2f, 0);
+                        yield return new WaitForSeconds(0.2f);
+                        GetComponent<CapsuleCollider2D>().enabled = false;
+                        transform.localScale -= new Vector3(0, 0.2f, 0);
+                    }
+                    else
+                    {
+                        for (int i = 0; i < pellets; i++)
+                        {
+                            fireAngle = Quaternion.Euler(0, 0, spread / 2.0f * (Random.value * 2 - 1)) * transform.up;
+                            o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.identity);
+                            o.GetComponent<Rigidbody2D>().AddForce(fireAngle * (18 + 4 * Random.value), ForceMode2D.Impulse);
+                        }
                     }
                     yield return new WaitForSeconds(burstGap);
                 }
