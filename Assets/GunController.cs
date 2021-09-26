@@ -123,7 +123,7 @@ namespace Platformer.Mechanics
 
                 for (int h = 0; h < burstCount; h++)
                 {
-                    gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
+                    transform.parent.GetComponent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
                     if (melee)
                     {
                         GetComponent<CapsuleCollider2D>().enabled = true;
