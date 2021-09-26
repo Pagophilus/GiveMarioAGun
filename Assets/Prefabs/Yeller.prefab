@@ -266,3 +266,5 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   health: {fileID: 0}
   controlEnabled: 1
+  explosion: {fileID: 5263482483540761938, guid: 0003dbc9b98d63a4389630cc71a0807b,
+    type: 3}
