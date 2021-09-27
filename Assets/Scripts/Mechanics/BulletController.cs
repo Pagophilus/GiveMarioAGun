@@ -13,22 +13,16 @@ namespace Platformer.Mechanics
     /// </summary>
     public class BulletController : MonoBehaviour
     {
-
-        private bool destroy;
         protected Rigidbody2D body;
 
         SpriteRenderer spriteRenderer;
-        internal Animator animator;
 
         public GameObject explosion;
         void Awake()
         { 
             spriteRenderer = GetComponent<SpriteRenderer>();
-            animator = GetComponent<Animator>();
             body = GetComponent<Rigidbody2D>();
-            destroy = false;
         }
-
 
         protected void FixedUpdate()
         {
@@ -37,46 +31,7 @@ namespace Platformer.Mechanics
             if (body.velocity.x > 0)
             {
                 spriteRenderer.flipY = true;
-
-            }
-            if (destroy)
-            {
-                Destroy(gameObject);
             }
         } 
-
-        protected void ComputeVelocity()
-        {
-        }
-
-        void OnCollisionEnter2D(Collision2D collision)
-        {
-            var enemy = collision.gameObject.GetComponent<EnemyController>();
-            if (enemy != null)
-            {
-                var enemyHealth = enemy.GetComponent<Health>();
-                if (enemyHealth != null)
-                {
-                    enemyHealth.Decrement();
-                }
-                else
-                {
-                    Schedule<EnemyDeath>().enemy = enemy;
-                }
-            }
-            else
-            {
-                var button = collision.gameObject.GetComponent<ButtonController>();
-                if (button != null)
-                {
-                    button.Activate();
-                }
-            }
-            if (explosion != null)
-            { 
-                Instantiate(explosion, (Vector2)transform.position, Quaternion.identity);
-            }
-            destroy = true;            
-        }
     }
 }

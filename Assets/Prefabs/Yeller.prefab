@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7658043333072217950}
   - component: {fileID: 2816860982323066339}
   - component: {fileID: 7640881903637965242}
+  - component: {fileID: 1946938324038259074}
   m_Layer: 3
   m_Name: Yeller
   m_TagString: Player
@@ -258,13 +259,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39acf59b77b6a394d81ae35d3200ed2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpAudio: {fileID: 0}
-  respawnAudio: {fileID: 0}
-  ouchAudio: {fileID: 0}
-  maxSpeed: 7
-  collider2d: {fileID: 0}
-  audioSource: {fileID: 0}
-  health: {fileID: 0}
-  controlEnabled: 1
   explosion: {fileID: 5263482483540761938, guid: 0003dbc9b98d63a4389630cc71a0807b,
     type: 3}
+--- !u!114 &1946938324038259074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008275062895366250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c886de2c0d39024a9890a95eb61590e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosion: {fileID: 5263482483540761938, guid: 0003dbc9b98d63a4389630cc71a0807b,
+    type: 3}
+  destroyOnContact: 1
+  damage: 1

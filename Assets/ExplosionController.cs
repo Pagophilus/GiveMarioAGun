@@ -13,7 +13,7 @@ namespace Platformer.Mechanics
     {
         private float safety;
         Animator animator;
-        int counter;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -30,33 +30,6 @@ namespace Platformer.Mechanics
             if (safety > 2.0f)
             {
                 Destroy(gameObject);
-            }
-
-        }
-
-        void OnCollisionEnter2D(Collision2D collision)
-        {
-            Debug.Log("ddd1 explosion collided " + collision.gameObject.name);
-            var enemy = collision.gameObject.GetComponent<EnemyController>();
-            if (enemy != null)
-            {
-                var enemyHealth = enemy.GetComponent<Health>();
-                if (enemyHealth != null)
-                {
-                    enemyHealth.Decrement();
-                }
-                else
-                {
-                    Schedule<EnemyDeath>().enemy = enemy;
-                }
-            }
-            else
-            {
-                var button = collision.gameObject.GetComponent<ButtonController>();
-                if (button != null)
-                {
-                    button.Activate();
-                }
             }
         }
     }

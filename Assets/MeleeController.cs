@@ -13,12 +13,9 @@ namespace Platformer.Mechanics
     /// </summary>
     public class MeleeController : MonoBehaviour
     {
-
-        public GameObject explosion;
         void Awake()
         {
         }
-
 
         protected void FixedUpdate()
         {
@@ -26,36 +23,6 @@ namespace Platformer.Mechanics
 
         protected void ComputeVelocity()
         {
-        }
-
-        void OnCollisionEnter2D(Collision2D collision)
-        {
-            Debug.Log("ddd1 sword collided " + collision.gameObject.name);
-            var enemy = collision.gameObject.GetComponent<EnemyController>();
-            if (enemy != null)
-            {
-                var enemyHealth = enemy.GetComponent<Health>();
-                if (enemyHealth != null)
-                {
-                    enemyHealth.Damage(10);
-                }
-                else
-                {
-                    Schedule<EnemyDeath>().enemy = enemy;
-                }
-            }
-            else
-            {
-                var button = collision.gameObject.GetComponent<ButtonController>();
-                if (button != null)
-                {
-                    button.Activate();
-                }
-            }
-            if (explosion != null)
-            {
-                Instantiate(explosion, (Vector2)transform.position, Quaternion.identity);
-            }
         }
     }
 }

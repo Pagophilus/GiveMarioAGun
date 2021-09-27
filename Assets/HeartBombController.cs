@@ -33,7 +33,7 @@ namespace Platformer.Mechanics
         }
 
 
-        protected void Update()
+        protected void FixedUpdate()
         {
             if (!body.isKinematic)
             {
