@@ -73,7 +73,10 @@ namespace Platformer.Mechanics
             hud.UpdateAmmo(magazine, magazineCap);
             if (hitscan)
             {
-                gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
+                if (!Input.GetKey(KeyCode.S))
+                {
+                    transform.parent.GetComponent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
+                }
 
                 // Set the start position for our visual effect for our laser to the position of gunEnd
                 if (laserLine != null)
@@ -103,6 +106,14 @@ namespace Platformer.Mechanics
                             enemyHealth.Decrement();
                         }
                     }
+                    else
+                    {
+                        var button = hit.collider.gameObject.GetComponent<ButtonController>();
+                        if (button != null)
+                        {
+                            button.Activate();
+                        }
+                    }
                     Instantiate(impactFX, hit.point + (Vector2)transform.up * -0.02f, Quaternion.LookRotation(hit.normal));
                 }
                 else
@@ -123,7 +134,10 @@ namespace Platformer.Mechanics
 
                 for (int h = 0; h < burstCount; h++)
                 {
-                    transform.parent.GetComponent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
+                    if (!Input.GetKey(KeyCode.S))
+                    {
+                        transform.parent.GetComponent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
+                    }
                     if (melee)
                     {
                         GetComponent<CapsuleCollider2D>().enabled = true;

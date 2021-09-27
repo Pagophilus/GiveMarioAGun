@@ -64,6 +64,14 @@ namespace Platformer.Mechanics
                     Schedule<EnemyDeath>().enemy = enemy;
                 }
             }
+            else
+            {
+                var button = collision.gameObject.GetComponent<ButtonController>();
+                if (button != null)
+                {
+                    button.Activate();
+                }
+            }
             if (explosion != null)
             { 
                 Instantiate(explosion, (Vector2)transform.position, Quaternion.identity);
