@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2816860982323066339}
   - component: {fileID: 7640881903637965242}
   - component: {fileID: 1946938324038259074}
+  - component: {fileID: -2290830681209707639}
   m_Layer: 3
   m_Name: Yeller
   m_TagString: Player
@@ -30,13 +31,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008275062895366250}
-  m_LocalRotation: {x: 0, y: -0, z: 0.7071068, w: -0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 270}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6076706666387793074
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -74,8 +75,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1907945055
-  m_SortingLayer: 0
+  m_SortingLayerID: 581752435
+  m_SortingLayer: 1
   m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 77892cddf99345a49bee50e3d6fb8ef5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -259,8 +260,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39acf59b77b6a394d81ae35d3200ed2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosion: {fileID: 5263482483540761938, guid: 0003dbc9b98d63a4389630cc71a0807b,
-    type: 3}
 --- !u!114 &1946938324038259074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,3 +276,22 @@ MonoBehaviour:
     type: 3}
   destroyOnContact: 1
   damage: 1
+--- !u!95 &-2290830681209707639
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008275062895366250}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b9363ac58749ab24995114baa6a02e6c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

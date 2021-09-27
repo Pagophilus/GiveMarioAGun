@@ -22,6 +22,8 @@ namespace Platformer.Mechanics
         public float recoil = 8.0f;
         public int magazineCap = 10;
         private int magazine = 10;
+        public float bulletForce = 18;
+        public float bulletForceVariance = 4;
 
         private HUDController hud;
 
@@ -37,10 +39,21 @@ namespace Platformer.Mechanics
         private LineRenderer laserLine;                                        // Reference to the LineRenderer component which will display our laserline
 
         private float fireCountDown = -1.0f;
+        //Crosshair
+        public GameObject crosshair;
+        //Gun Animation
+        private Animator animator;
+        private GameObject Animation;
+       // public Vector2 worldCor;
+
+        //private PlayerController
 
         // Start is called before the first frame update
         void Start()
         {
+            Animation = GameObject.Find("Animation");
+            //crosshair = GameObject.Find("Donut");
+            animator = GetComponentInChildren<Animator>();
             laserLine = GetComponent<LineRenderer>();
             if (laserLine != null)
             {
@@ -84,7 +97,7 @@ namespace Platformer.Mechanics
                     laserLine.SetPosition(0, transform.position + transform.up * 0.5f);
                 }
 
-                Debug.Log("getting hits");
+               // Debug.Log("getting hits");
                 // Check if our raycast has hit anything
                 RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * 0.5f, transform.up, 100.0f);
                 if (hit.collider != null)
@@ -114,11 +127,16 @@ namespace Platformer.Mechanics
                             button.Activate();
                         }
                     }
+                    if(animator != null)
+                    {
+                        Debug.Log("Firing");
+                        animator.Play("Firing");
+                    }
                     Instantiate(impactFX, hit.point + (Vector2)transform.up * -0.02f, Quaternion.LookRotation(hit.normal));
                 }
                 else
                 {
-                    Debug.Log("no hit found: ");
+                    //Debug.Log("no hit found: ");
 
                     if (laserLine != null)
                     {
@@ -148,11 +166,16 @@ namespace Platformer.Mechanics
                     }
                     else
                     {
+                        if (animator != null)
+                        {
+                            Debug.Log("Firing");
+                            animator.Play("Firing");
+                        }
                         for (int i = 0; i < pellets; i++)
                         {
                             fireAngle = Quaternion.Euler(0, 0, spread / 2.0f * (Random.value * 2 - 1)) * transform.up;
                             o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.identity);
-                            o.GetComponent<Rigidbody2D>().AddForce(fireAngle * (18 + 4 * Random.value), ForceMode2D.Impulse);
+                            o.GetComponent<Rigidbody2D>().AddForce(fireAngle * (bulletForce + bulletForceVariance * Random.value), ForceMode2D.Impulse);
                         }
                     }
                     yield return new WaitForSeconds(burstGap);
@@ -162,6 +185,14 @@ namespace Platformer.Mechanics
 
         void Update()
         {
+            Vector2 worldcoord;
+            worldcoord.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+            worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
+            GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
+            transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
+            //Animation.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
+            crosshair.transform.position = worldcoord;
+            
             if (continuous)
             {
                 if (Input.GetMouseButton(0) && magazine > 0)

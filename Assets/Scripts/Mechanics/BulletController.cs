@@ -17,7 +17,6 @@ namespace Platformer.Mechanics
 
         SpriteRenderer spriteRenderer;
 
-        public GameObject explosion;
         void Awake()
         { 
             spriteRenderer = GetComponent<SpriteRenderer>();

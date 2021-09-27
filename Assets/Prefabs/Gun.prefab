@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 6502427989934358769}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 9085293319749420797}
   m_Father: {fileID: 0}
@@ -47,13 +47,19 @@ MonoBehaviour:
   bullet: {fileID: 2008275062895366250, guid: 6f26530875d2bd743839820fff6fc530, type: 3}
   impactFX: {fileID: 0}
   pellets: 14
+  burstCount: 1
+  burstGap: 0.25
   spread: 20
   recoil: 2
+  magazineCap: 10
   fireRate: 8
+  melee: 0
   auto: 1
   hitscan: 0
   continuous: 0
   randomSpread: 0
+  crosshair: {fileID: 3496584861662237988, guid: b1c254a593a41bd44951a1fd01136f1d,
+    type: 3}
 --- !u!1001 &6502427989928769532
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -70,7 +76,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: c7adb6bc2bbef9742895d40a1226f93c,
+      objectReference: {fileID: 21300000, guid: 32c8f55c4e08dc441b0868f095d9646d,
         type: 3}
     - target: {fileID: 485209547327725069, guid: 783659ba8cbf76441868ab3e3ad6e1ce,
         type: 3}

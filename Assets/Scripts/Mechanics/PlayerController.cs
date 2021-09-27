@@ -51,12 +51,14 @@ namespace Platformer.Mechanics
         protected Health health;
         private bool controlEnabled = true;
 
-        private GameObject crosshair;
+        
         private GameObject gun;
 
         public GameObject[] guns;
 
         float xMover;
+
+        Vector2 worldcoord;
 
         bool jump;
         Vector2 move;
@@ -77,7 +79,6 @@ namespace Platformer.Mechanics
             spriteRenderer = GetComponent<SpriteRenderer>();
             animator = GetComponent<Animator>();
             hud = GameObject.Find("Hud").GetComponent<HUDController>();
-            crosshair = GameObject.Find("Donut");
             hud.UpdateHUD(this);
             gun = guns[gunIndex];
         }
@@ -98,7 +99,7 @@ namespace Platformer.Mechanics
                 Vector2 worldcoord;
                 worldcoord.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
                 worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
-                crosshair.transform.position = worldcoord;
+                
 
                 if (Input.GetMouseButtonDown(1))
                 {
@@ -109,9 +110,9 @@ namespace Platformer.Mechanics
                     hud.UpdateHUD(this);
                 }
 
-                //Gun animation
-                gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
-                gun.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));                          
+               // Gun animation
+               // gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
+               // gun.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));                          
             }
             else
             {
