@@ -84,7 +84,7 @@ namespace Platformer.Mechanics
         }
 
         protected void Update()
-        {            
+        {
             if (controlEnabled)
             {
                 if (jumpState == JumpState.Grounded && Input.GetButtonDown("Jump"))
@@ -99,8 +99,14 @@ namespace Platformer.Mechanics
                 Vector2 worldcoord;
                 worldcoord.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
                 worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
-                
 
+                if (worldcoord.x > transform.position.x)
+                {
+                    spriteRenderer.flipX = false;
+                } else
+                {
+                    spriteRenderer.flipX = true;
+                }
                 if (Input.GetMouseButtonDown(1))
                 {
                     gun.SetActive(false);
@@ -109,17 +115,24 @@ namespace Platformer.Mechanics
                     gun.SetActive(true);
                     hud.UpdateHUD(this);
                 }
-
-               // Gun animation
-               // gun.GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
-               // gun.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));                          
             }
             else
             {
                 move.x = 0;
             }
             UpdateJumpState();
-            ComputeVelocity();
+            if (jump && isGrounded())
+            {
+                body.AddForce(new Vector2(0, jumpTakeOffSpeed * model.jumpModifier), ForceMode2D.Impulse);
+                jump = false;
+            }
+            else if (stopJump)
+            {
+                stopJump = false;
+            }
+
+            animator.SetBool("grounded", isGrounded());
+            animator.SetFloat("velocityX", Mathf.Abs(body.velocity.x) / maxSpeed);
         }
 
         void UpdateJumpState()
@@ -162,31 +175,6 @@ namespace Platformer.Mechanics
                     jumpState = JumpState.Grounded;
                     break;
             }
-        }
-
-        protected void ComputeVelocity()
-        {
-            if (jump && isGrounded())
-            {
-                body.AddForce(new Vector2(0, jumpTakeOffSpeed * model.jumpModifier), ForceMode2D.Impulse);
-                jump = false;
-            }
-            else if (stopJump)
-            {
-                stopJump = false;
-                /*if (velocity.y > 0)
-                {
-                    velocity.y = velocity.y * model.jumpDeceleration;
-                }*/
-            }
-
-            if (xMover > 0.01f) 
-                spriteRenderer.flipX = false;
-            else if (xMover < -0.01f)
-                spriteRenderer.flipX = true;
-
-            animator.SetBool("grounded", isGrounded());
-            animator.SetFloat("velocityX", Mathf.Abs(body.velocity.x) / maxSpeed);
         }
 
         public enum JumpState

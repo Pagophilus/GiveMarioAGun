@@ -199,7 +199,7 @@ namespace Platformer.Mechanics
                 transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
             } else
             {
-                transform.Rotate(Vector3.forward, GetComponentInChildren<SpriteRenderer>().flipY ? -4.0f : 4.0f);
+                transform.Rotate(Vector3.forward, (GetComponentInChildren<SpriteRenderer>().flipY ? -5.0f : 5.0f) * 360.0f * Time.deltaTime);
             }
             crosshair.transform.position = worldcoord;
             
