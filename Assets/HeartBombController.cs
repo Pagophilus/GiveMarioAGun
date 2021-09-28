@@ -13,22 +13,18 @@ namespace Platformer.Mechanics
     /// </summary>
     public class HeartBombController : MonoBehaviour
     {
-
-        private bool destroy;
         protected Rigidbody2D body;
-
         SpriteRenderer spriteRenderer;
         internal Animator animator;
-
         public GameObject explosion;
         private float spin;
+
         void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             animator = GetComponent<Animator>();
             body = GetComponent<Rigidbody2D>();
             spin = Random.Range(-4.0f, 4.0f);
-            destroy = false;
             transform.Rotate(Vector3.forward, spin);
         }
 

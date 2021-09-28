@@ -36,6 +36,7 @@ namespace Platformer.Mechanics
         public bool hitscan = false;
         public bool continuous = false;
         public bool randomSpread = false;
+        public float beamLength = 50.0f;
         private LineRenderer laserLine;                                        // Reference to the LineRenderer component which will display our laserline
 
         private float fireCountDown = -1.0f;
@@ -44,7 +45,6 @@ namespace Platformer.Mechanics
         //Gun Animation
         private Animator animator;
         private GameObject Animation;
-        // public Vector2 worldCor;
 
         private bool rotationLocked = false;
 
@@ -88,7 +88,7 @@ namespace Platformer.Mechanics
             hud.UpdateAmmo(magazine, magazineCap);
             if (hitscan)
             {
-                if (!Input.GetKey(KeyCode.S))
+                if (!Input.GetKey(KeyCode.S) && !continuous)
                 {
                     transform.parent.GetComponent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
                 }
@@ -99,9 +99,8 @@ namespace Platformer.Mechanics
                     laserLine.SetPosition(0, transform.position + transform.up * 0.5f);
                 }
 
-               // Debug.Log("getting hits");
                 // Check if our raycast has hit anything
-                RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * 0.5f, transform.up, 100.0f);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position /*+ transform.up * 0.5f*/, transform.up, beamLength);
                 if (hit.collider != null)
                 {
                     //Debug.Log("hit found: " + hit.point.x + " " + hit.point.y + " " + hit.collider.gameObject.name);
@@ -129,10 +128,13 @@ namespace Platformer.Mechanics
                             button.Activate();
                         }
                     }
-                    if(animator != null)
+                    if (animator != null)
                     {
-                        Debug.Log("Firing");
                         animator.Play("Firing");
+                    }
+                    if (!Input.GetKey(KeyCode.S) && continuous)
+                    {
+                        transform.parent.GetComponent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Force);
                     }
                     Instantiate(impactFX, hit.point + (Vector2)transform.up * -0.02f, Quaternion.LookRotation(hit.normal));
                 }
@@ -143,7 +145,7 @@ namespace Platformer.Mechanics
                     if (laserLine != null)
                     {
                         // If we did not hit anything, set the end of the line to a position directly in front of the camera at the distance of weaponRange
-                        laserLine.SetPosition(1, transform.position + transform.up * 50.0f);
+                        laserLine.SetPosition(1, transform.position + transform.up * beamLength);
                     }
                 }
             }

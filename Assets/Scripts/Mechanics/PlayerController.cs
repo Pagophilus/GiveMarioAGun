@@ -29,7 +29,6 @@ namespace Platformer.Mechanics
         private HUDController hud;
 
         //Slam Animation
-        private float pastYVel = 0.0f;
         public GameObject slamObject;
   
         //LayerMasks
@@ -44,6 +43,8 @@ namespace Platformer.Mechanics
         /// </summary>
         public float jumpTakeOffSpeed = 7;
 
+        public float fastFallForce = 8.0f;
+
         private JumpState jumpState = JumpState.Grounded;
         private bool stopJump;
         private Collider2D collider2d;
@@ -56,12 +57,9 @@ namespace Platformer.Mechanics
 
         public GameObject[] guns;
 
-        float xMover;
-
         Vector2 worldcoord;
 
         bool jump;
-        Vector2 move;
         SpriteRenderer spriteRenderer;
         internal Animator animator;
         readonly PlatformerModel model = Simulation.GetModel<PlatformerModel>();
@@ -115,10 +113,6 @@ namespace Platformer.Mechanics
                     gun.SetActive(true);
                     hud.UpdateHUD(this);
                 }
-            }
-            else
-            {
-                move.x = 0;
             }
             UpdateJumpState();
             if (jump && isGrounded())
@@ -210,7 +204,7 @@ namespace Platformer.Mechanics
         {
             if (controlEnabled)
             {
-                xMover = Input.GetAxis("Horizontal");
+                float xMover = Input.GetAxis("Horizontal");
                 if (body.velocity.x > -maxSpeed && xMover < -0.1f)
                 {
                     body.AddForce(new Vector2(-1 * maxSpeed, 0.0f), ForceMode2D.Force);
@@ -222,6 +216,12 @@ namespace Platformer.Mechanics
                 else if (Math.Abs(xMover) < 0.1f)
                 {
                     body.AddForce(new Vector2(body.velocity.x / -2.0f, 0.0f), ForceMode2D.Force);
+                }
+
+                float yMover = Input.GetAxis("Vertical");
+                if (yMover < -0.1f)
+                {
+                    body.AddForce(new Vector2(0.0f, yMover * fastFallForce), ForceMode2D.Force);
                 }
             }
         }
