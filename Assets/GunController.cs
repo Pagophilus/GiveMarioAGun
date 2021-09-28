@@ -38,6 +38,7 @@ namespace Platformer.Mechanics
         public bool randomSpread = false;
         public float beamLength = 50.0f;
         private LineRenderer laserLine;                                        // Reference to the LineRenderer component which will display our laserline
+        private ParticleSystem particles;
 
         private float fireCountDown = -1.0f;
         //Crosshair
@@ -61,6 +62,7 @@ namespace Platformer.Mechanics
             {
                 laserLine.sortingLayerName = "Foreground";
             }
+            particles = GetComponent<ParticleSystem>();
             magazine = magazineCap;
             hud.UpdateAmmo(magazine, magazineCap);
         }
@@ -109,6 +111,8 @@ namespace Platformer.Mechanics
                     {
                         // Set the end position for our laser line 
                         laserLine.SetPosition(1, hit.point);
+
+                        //particles.shape.radius = hit.distance;
                     }
 
                     var enemy = hit.collider.gameObject.GetComponent<EnemyController>();
@@ -146,6 +150,7 @@ namespace Platformer.Mechanics
                     {
                         // If we did not hit anything, set the end of the line to a position directly in front of the camera at the distance of weaponRange
                         laserLine.SetPosition(1, transform.position + transform.up * beamLength);
+                        //particles.shape.radius = beamLength;
                     }
                 }
             }
@@ -209,11 +214,19 @@ namespace Platformer.Mechanics
             {
                 if (Input.GetMouseButton(0) && magazine > 0)
                 {
+                    if (particles != null)
+                    {
+                        particles.enableEmission = true;
+                    }
                     laserLine.enabled = true;
                     StartCoroutine(shoot());
                 }
                 else
                 {
+                    if (particles != null)
+                    {
+                        particles.enableEmission = false;
+                    }
                     laserLine.enabled = false;
                 }
             }
