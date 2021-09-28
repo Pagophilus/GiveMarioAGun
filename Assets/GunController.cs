@@ -44,7 +44,9 @@ namespace Platformer.Mechanics
         //Gun Animation
         private Animator animator;
         private GameObject Animation;
-       // public Vector2 worldCor;
+        // public Vector2 worldCor;
+
+        private bool rotationLocked = false;
 
         //private PlayerController
 
@@ -159,10 +161,13 @@ namespace Platformer.Mechanics
                     if (melee)
                     {
                         GetComponent<CapsuleCollider2D>().enabled = true;
-                        transform.localScale += new Vector3(0, 0.2f, 0);
+                        //transform.localScale += new Vector3(0, 0.2f, 0);
+                        rotationLocked = true;
                         yield return new WaitForSeconds(0.2f);
                         GetComponent<CapsuleCollider2D>().enabled = false;
-                        transform.localScale -= new Vector3(0, 0.2f, 0);
+                        //transform.localScale -= new Vector3(0, 0.2f, 0);
+                        rotationLocked = false;
+
                     }
                     else
                     {
@@ -188,9 +193,14 @@ namespace Platformer.Mechanics
             Vector2 worldcoord;
             worldcoord.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
             worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
-            GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
-            transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
-            //Animation.transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
+            if (!rotationLocked)
+            {
+                GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
+                transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
+            } else
+            {
+                transform.Rotate(Vector3.forward, GetComponentInChildren<SpriteRenderer>().flipY ? -4.0f : 4.0f);
+            }
             crosshair.transform.position = worldcoord;
             
             if (continuous)

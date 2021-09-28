@@ -46,19 +46,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a43eb3d3917163a40bb98db7beb9961a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 2008275062895366250, guid: 6f26530875d2bd743839820fff6fc530, type: 3}
+  bullet: {fileID: 0}
   impactFX: {fileID: 0}
-  pellets: 14
+  pellets: 0
   burstCount: 1
   burstGap: 0.25
   spread: 20
   recoil: -2
   magazineCap: 10
+  bulletForce: 18
+  bulletForceVariance: 4
   fireRate: 3
+  melee: 0
   auto: 0
   hitscan: 0
   continuous: 0
   randomSpread: 0
+  crosshair: {fileID: 0}
 --- !u!70 &812353945618565652
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
