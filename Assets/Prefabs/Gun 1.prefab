@@ -71,12 +71,15 @@ MonoBehaviour:
   spread: 20
   recoil: 2
   magazineCap: 10
+  bulletForce: 18
+  bulletForceVariance: 4
   fireRate: 60
   melee: 0
   auto: 1
   hitscan: 0
   continuous: 0
   randomSpread: 0
+  beamLength: 50
   crosshair: {fileID: 3496584861662237988, guid: b1c254a593a41bd44951a1fd01136f1d,
     type: 3}
 --- !u!1001 &1526181393472980339
