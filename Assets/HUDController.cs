@@ -13,6 +13,7 @@ namespace Platformer.Mechanics
         
         // TODO(grantcarlson): make this private.
         public GameObject ammoText;
+        public GameObject staminaText;
         private GameObject newImage;
         public GameObject timerText;
         public Sprite border;
@@ -74,6 +75,19 @@ namespace Platformer.Mechanics
                 ammoText.GetComponent<Text>().color = new Color32(255, 0, 255, 200);
             }
             ammoText.GetComponent<Text>().text = magazine + "/" + magazineCap;
+        }
+
+        public void UpdateStamina(int magazine, int magazineCap)
+        {
+            if (magazine == 0)
+            {
+                staminaText.GetComponent<Text>().color = Color.red;
+            }
+            else
+            {
+                staminaText.GetComponent<Text>().color = new Color32(255, 0, 255, 200);
+            }
+            staminaText.GetComponent<Text>().text = magazine + "/" + magazineCap;
         }
 
         public void UpdateTimer(float secsLeft)

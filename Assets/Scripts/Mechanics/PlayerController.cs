@@ -234,7 +234,7 @@ namespace Platformer.Mechanics
         public void Spawn()
         {
             collider2d.enabled = true;
-            controlEnabled = false;
+            EnableControl(false);
             if (audioSource && respawnAudio)
                 audioSource.PlayOneShot(respawnAudio);
             health.Increment();
@@ -253,8 +253,7 @@ namespace Platformer.Mechanics
                 health.Die();
                 model.virtualCamera.m_Follow = null;
                 model.virtualCamera.m_LookAt = null;
-                // player.collider.enabled = false;
-                controlEnabled = false;
+                EnableControl(false);
 
                 if (audioSource && ouchAudio)
                 {
@@ -269,6 +268,7 @@ namespace Platformer.Mechanics
         public void EnableControl(bool enabled)
         {
             controlEnabled = enabled;
+            gun.GetComponent<GunController>().setAlive(enabled);
         }
     }
 }

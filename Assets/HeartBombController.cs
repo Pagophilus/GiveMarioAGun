@@ -34,12 +34,16 @@ namespace Platformer.Mechanics
             if (!body.isKinematic)
             {
                 transform.Rotate(Vector3.forward, spin);
-            }
+            } 
+        }
+
+        protected void Update()
+        {
             if (Input.GetMouseButtonDown(0))
             {
                 Instantiate(explosion, (Vector2)transform.position, Quaternion.identity);
                 Destroy(gameObject);
-            }    
+            }
         }
 
         protected void ComputeVelocity()

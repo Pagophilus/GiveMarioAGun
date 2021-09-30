@@ -48,14 +48,12 @@ namespace Platformer.Mechanics
         private GameObject Animation;
 
         private bool rotationLocked = false;
-
-        //private PlayerController
+        private bool alive = true;
 
         // Start is called before the first frame update
         void Start()
         {
             Animation = GameObject.Find("Animation");
-            //crosshair = GameObject.Find("Donut");
             animator = GetComponentInChildren<Animator>();
             laserLine = GetComponent<LineRenderer>();
             if (laserLine != null)
@@ -64,7 +62,7 @@ namespace Platformer.Mechanics
             }
             particles = GetComponent<ParticleSystem>();
             magazine = magazineCap;
-            hud.UpdateAmmo(magazine, magazineCap);
+            UpdateAmmo();
         }
 
         void Awake()
@@ -74,20 +72,31 @@ namespace Platformer.Mechanics
 
         void OnEnable()
         {
-            hud.UpdateAmmo(magazine, magazineCap);
+            UpdateAmmo();
         }
 
         public void RefillAmmo()
         {
             magazine = magazineCap;
-            hud.UpdateAmmo(magazine, magazineCap);
+            UpdateAmmo();
+        }
+
+        private void UpdateAmmo()
+        {
+            if (melee)
+            {
+                hud.UpdateStamina(magazine, magazineCap);
+            } else
+            {
+                hud.UpdateAmmo(magazine, magazineCap);
+            }
         }
 
         IEnumerator shoot()
         {
             //gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
             magazine--;
-            hud.UpdateAmmo(magazine, magazineCap);
+            UpdateAmmo();
             if (hitscan)
             {
                 if (!Input.GetKey(KeyCode.S) && !continuous)
@@ -168,11 +177,9 @@ namespace Platformer.Mechanics
                     if (melee)
                     {
                         GetComponent<CapsuleCollider2D>().enabled = true;
-                        //transform.localScale += new Vector3(0, 0.2f, 0);
                         rotationLocked = true;
                         yield return new WaitForSeconds(0.2f);
                         GetComponent<CapsuleCollider2D>().enabled = false;
-                        //transform.localScale -= new Vector3(0, 0.2f, 0);
                         rotationLocked = false;
 
                     }
@@ -195,49 +202,57 @@ namespace Platformer.Mechanics
             }
         }
 
+        public void setAlive(bool alive)
+        {
+            this.alive = alive;
+        }
+
         void Update()
         {
-            Vector2 worldcoord;
-            worldcoord.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
-            worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
-            if (!rotationLocked)
+            if (alive)
             {
-                GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
-                transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
-            } else
-            {
-                transform.Rotate(Vector3.forward, (GetComponentInChildren<SpriteRenderer>().flipY ? -5.0f : 5.0f) * 360.0f * Time.deltaTime);
-            }
-            crosshair.transform.position = worldcoord;
-            
-            if (continuous)
-            {
-                if (Input.GetMouseButton(0) && magazine > 0)
+                Vector2 worldcoord;
+                worldcoord.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+                worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
+                if (!rotationLocked)
                 {
-                    if (particles != null)
-                    {
-                        particles.enableEmission = true;
-                    }
-                    laserLine.enabled = true;
-                    StartCoroutine(shoot());
+                    GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
+                    transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));
                 }
                 else
                 {
-                    if (particles != null)
-                    {
-                        particles.enableEmission = false;
-                    }
-                    laserLine.enabled = false;
+                    transform.Rotate(Vector3.forward, (GetComponentInChildren<SpriteRenderer>().flipY ? -5.0f : 5.0f) * 360.0f * Time.deltaTime);
                 }
-            }
-            else if ((auto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0)) && fireCountDown <= 0.0f && magazine > 0)
-            {
-                StartCoroutine(shoot());
-                //fireCountDown = 1.0f / fireRate;  <---BAD VERY BAD
-                fireCountDown = 60.0f / fireRate; //<---GOOD VERY GOOD
-            }
-            fireCountDown -= Time.deltaTime;
+                crosshair.transform.position = worldcoord;
 
+                if (continuous)
+                {
+                    if (Input.GetMouseButton(0) && magazine > 0)
+                    {
+                        if (particles != null)
+                        {
+                            particles.enableEmission = true;
+                        }
+                        laserLine.enabled = true;
+                        StartCoroutine(shoot());
+                    }
+                    else
+                    {
+                        if (particles != null)
+                        {
+                            particles.enableEmission = false;
+                        }
+                        laserLine.enabled = false;
+                    }
+                }
+                else if ((auto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0)) && fireCountDown <= 0.0f && magazine > 0)
+                {
+                    StartCoroutine(shoot());
+                    //fireCountDown = 1.0f / fireRate;  <---BAD VERY BAD
+                    fireCountDown = 60.0f / fireRate; //<---GOOD VERY GOOD
+                }
+                fireCountDown -= Time.deltaTime;
+            }
         }
     }
 }
