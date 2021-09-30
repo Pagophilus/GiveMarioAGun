@@ -14,6 +14,7 @@ namespace Platformer.Mechanics
         // TODO(grantcarlson): make this private.
         public GameObject ammoText;
         private GameObject newImage;
+        public GameObject timerText;
         public Sprite border;
 
         // Start is called before the first frame update
@@ -73,6 +74,12 @@ namespace Platformer.Mechanics
                 ammoText.GetComponent<Text>().color = new Color32(255, 0, 255, 200);
             }
             ammoText.GetComponent<Text>().text = magazine + "/" + magazineCap;
+        }
+
+        public void UpdateTimer(float secsLeft)
+        {
+            timerText.GetComponent<Text>().color = new Color32(255, 0, 255, 200);
+            timerText.GetComponent<Text>().text = ("" + (int) secsLeft);
         }
     }
 }

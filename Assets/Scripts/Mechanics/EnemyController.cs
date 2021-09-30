@@ -14,6 +14,7 @@ namespace Platformer.Mechanics
     {
         public PatrolPath path;
         public AudioClip ouch;
+        public float damage = 10.0f;
 
         internal PatrolPath.Mover mover;
         internal AnimationController control;
@@ -23,12 +24,16 @@ namespace Platformer.Mechanics
 
         public Bounds Bounds => _collider.bounds;
 
+        private TimerController timer;
+
         void Awake()
         {
             control = GetComponent<AnimationController>();
             _collider = GetComponent<Collider2D>();
             _audio = GetComponent<AudioSource>();
             spriteRenderer = GetComponent<SpriteRenderer>();
+            timer = GameObject.Find("Timer").GetComponent<TimerController>();
+            damage = 10.0f;
         }
 
         void OnCollisionEnter2D(Collision2D collision)
@@ -38,10 +43,13 @@ namespace Platformer.Mechanics
             if (player != null)
             {
                 Debug.Log("PlayerCollided " + collision.gameObject.name);
+                Vector2 dist = player.transform.position - transform.position;
+                dist.Normalize();
+                player.Bounce(0.8f * dist);
+                //player.Bounce(0.8f);
 
-                var ev = Schedule<PlayerEnemyCollision>();
-                ev.player = player;
-                ev.enemy = this;
+                //player.GetComponent<Rigidbody2D>().AddForce()
+                timer.Damage(damage);
             }
         }
 

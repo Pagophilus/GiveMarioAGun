@@ -200,6 +200,11 @@ namespace Platformer.Mechanics
             body.AddForce(new Vector2(0.0f, value), ForceMode2D.Impulse);
         }
 
+        public void Bounce(Vector2 dir)
+        {
+            body.AddForce(dir, ForceMode2D.Impulse);
+        }
+
         protected virtual void FixedUpdate()
         {
             if (controlEnabled)

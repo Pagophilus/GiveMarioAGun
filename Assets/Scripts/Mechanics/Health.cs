@@ -20,7 +20,11 @@ namespace Platformer.Mechanics
         /// </summary>
         public bool IsAlive => currentHP > 0;
 
+        private TimerController timer;
+
         int currentHP;
+
+        private bool dead = false;
 
         /// <summary>
         /// Increment the HP of the entity.
@@ -42,18 +46,22 @@ namespace Platformer.Mechanics
         public void Damage(int damage)
         {
             currentHP = Mathf.Clamp(currentHP - damage, 0, maxHP);
-            if (currentHP == 0)
+            if (currentHP == 0 && !dead)
             {
+                dead = true;
                 var enemy = gameObject.GetComponent<EnemyController>();
                 if (enemy != null)
                 {
+                    timer.Damage(-10);
                     Schedule<EnemyDeath>().enemy = enemy;
                 }
                 else if (gameObject.GetComponent<PlayerController>())
                 {
-                    var ev = Schedule<HealthIsZero>();
-                    ev.health = this;
+                    timer.Damage(10);
+                    //var ev = Schedule<HealthIsZero>();
+                    //ev.health = this;
                 }
+
             }
         }
 
@@ -68,6 +76,7 @@ namespace Platformer.Mechanics
         void Awake()
         {
             currentHP = maxHP;
+            timer = GameObject.Find("Timer").GetComponent<TimerController>();
         }
     }
 }
