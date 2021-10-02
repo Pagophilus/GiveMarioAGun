@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 772289407653213039}
   - component: {fileID: 5843668731025413174}
   - component: {fileID: 131124899609577738}
+  - component: {fileID: 8543324764341315312}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Player
@@ -160,12 +161,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minGroundNormalY: 0.65
   gravityModifier: 1
-  velocity: {x: 0, y: 0}
   maxSpeed: 7
   jumpTakeOffSpeed: 7
   move: {x: 0, y: 0}
   jump: 0
   stopJump: 0
+  velocity: {x: 0, y: 0}
 --- !u!114 &772289407653213039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +181,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path: {fileID: 0}
   ouch: {fileID: 8300000, guid: b7f741588644cd64bbee6387cb54a96d, type: 3}
-  damage: 10
+  launchSpeed: 12
+  bullet: {fileID: 2008275062895366250, guid: 08e64e78252f1f54cb0d08c6d4425c3c, type: 3}
+  deathEffect: {fileID: 5263482483540761938, guid: 93820505a6957514abc1a958f6f7ab63,
+    type: 3}
 --- !u!82 &5843668731025413174
 AudioSource:
   m_ObjectHideFlags: 0
@@ -290,3 +294,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 10
+--- !u!114 &8543324764341315312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661912868639658944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35b211ba9f194e041b17815ade3fe69f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosion: {fileID: 0}
+  destroyOnContact: 0
+  damage: 15

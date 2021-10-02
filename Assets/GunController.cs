@@ -124,14 +124,10 @@ namespace Platformer.Mechanics
                         //particles.shape.radius = hit.distance;
                     }
 
-                    var enemy = hit.collider.gameObject.GetComponent<EnemyController>();
-                    if (enemy != null)
+                    var enemyHealth = hit.collider.gameObject.GetComponent<Health>();
+                    if (enemyHealth != null)
                     {
-                        var enemyHealth = enemy.GetComponent<Health>();
-                        if (enemyHealth != null)
-                        {
-                            enemyHealth.Decrement();
-                        }
+                        enemyHealth.Decrement();
                     }
                     else
                     {

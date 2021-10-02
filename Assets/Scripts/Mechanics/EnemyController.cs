@@ -14,7 +14,10 @@ namespace Platformer.Mechanics
     {
         public PatrolPath path;
         public AudioClip ouch;
-        public float damage = 10.0f;
+        public float launchSpeed = 12.0f;
+        public GameObject bullet;
+        public GameObject deathEffect;
+        protected GameObject thePlayer;
 
         internal PatrolPath.Mover mover;
         internal AnimationController control;
@@ -24,7 +27,7 @@ namespace Platformer.Mechanics
 
         public Bounds Bounds => _collider.bounds;
 
-        private TimerController timer;
+        protected float fireDelay = 1.0f;
 
         void Awake()
         {
@@ -32,35 +35,36 @@ namespace Platformer.Mechanics
             _collider = GetComponent<Collider2D>();
             _audio = GetComponent<AudioSource>();
             spriteRenderer = GetComponent<SpriteRenderer>();
-            timer = GameObject.Find("Timer").GetComponent<TimerController>();
-            damage = 10.0f;
+            thePlayer = GameObject.Find("Player");
         }
 
-        void OnCollisionEnter2D(Collision2D collision)
-        {
-            //Debug.Log("Collided");
-            var player = collision.gameObject.GetComponent<PlayerController>();
-            if (player != null)
+        public virtual void OnDamaged(int newHP, int oldHP) {
+            if (oldHP > 0 && newHP == 0 && deathEffect != null)
             {
-                Debug.Log("PlayerCollided " + collision.gameObject.name);
-                Vector2 dist = player.transform.position - transform.position;
-                dist.Normalize();
-                player.Bounce(0.8f * dist);
-                //player.Bounce(0.8f);
-
-                //player.GetComponent<Rigidbody2D>().AddForce()
-                timer.Damage(damage);
+                Instantiate(deathEffect, transform.position, Quaternion.identity);
             }
         }
 
-        void Update()
+        protected virtual void Update()
         {
+            if (fireDelay < 0.0f && Vector2.Distance(thePlayer.transform.position, transform.position) < 6.0f)
+            {
+                Vector2 fireAngle = thePlayer.transform.position - transform.position;
+                fireAngle.Normalize();
+                GameObject o = Instantiate(bullet, transform.position, Quaternion.identity);
+                o.GetComponent<Rigidbody2D>().AddForce(fireAngle * launchSpeed, ForceMode2D.Impulse);
+                fireDelay = 2.0f;
+            }
+            fireDelay -= Time.deltaTime;
             if (path != null)
             {
-                if (mover == null) mover = path.CreateMover(control.maxSpeed * 0.5f);
+                if (mover == null)
+                {
+                    mover = path.CreateMover(control.maxSpeed * 0.5f);
+                }
                 control.move.x = Mathf.Clamp(mover.Position.x - transform.position.x, -1, 1);
+                control.move.y = Mathf.Clamp(mover.Position.y - transform.position.y, -1, 1);
             }
         }
-
     }
 }

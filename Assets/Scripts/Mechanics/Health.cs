@@ -45,11 +45,17 @@ namespace Platformer.Mechanics
 
         public void Damage(int damage)
         {
+            int oldHP = currentHP;
             currentHP = Mathf.Clamp(currentHP - damage, 0, maxHP);
+            Debug.Log("ddd1 decrementing " + currentHP);
+            var enemy = gameObject.GetComponent<EnemyController>();
+            if (enemy != null)
+            {
+                enemy.OnDamaged(currentHP, oldHP);
+            }
             if (currentHP == 0 && !dead)
             {
                 dead = true;
-                var enemy = gameObject.GetComponent<EnemyController>();
                 if (enemy != null)
                 {
                     timer.Damage(-10);
@@ -60,6 +66,9 @@ namespace Platformer.Mechanics
                     timer.Damage(10);
                     //var ev = Schedule<HealthIsZero>();
                     //ev.health = this;
+                } else
+                {
+                    Destroy(gameObject);
                 }
 
             }
