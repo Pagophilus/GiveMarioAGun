@@ -15,7 +15,7 @@ namespace Platformer.Mechanics
         public GameObject ammoText;
         public GameObject staminaText;
         private GameObject newImage;
-        public GameObject staminaBar, ammoBar;
+        public Image staminaBar, ammoBar;
         public GameObject timerText;
         public Sprite border;
 
@@ -75,13 +75,8 @@ namespace Platformer.Mechanics
             {
                 ammoText.GetComponent<Text>().color = new Color32(255, 0, 255, 200);
             }
-            Vector3 newScale = staminaBar.transform.localScale;
-            newScale.y = (magazine + 0.0f) / magazineCap;
-            ammoBar.transform.localScale = newScale;
+            ammoBar.fillAmount = (magazine + 0.0f) / magazineCap;
 
-            Vector3 newPos = staminaBar.transform.localPosition;
-            newPos.y = -0.2f * (1.0f - (magazine + 0.0f) / magazineCap);
-            ammoBar.transform.localPosition = newPos;
             ammoText.GetComponent<Text>().text = magazine + "/" + magazineCap;
         }
 
@@ -95,13 +90,7 @@ namespace Platformer.Mechanics
             {
                 staminaText.GetComponent<Text>().color = new Color32(255, 0, 255, 200);
             }
-            Vector3 newScale = staminaBar.transform.localScale;
-            newScale.y = (magazine + 0.0f) / magazineCap;
-            staminaBar.transform.localScale = newScale;
-
-            Vector3 newPos = staminaBar.transform.localPosition;
-            newPos.y = -0.2f * (1.0f - (magazine + 0.0f) / magazineCap);
-            staminaBar.transform.localPosition = newPos;
+            staminaBar.fillAmount = (magazine + 0.0f) / magazineCap;
             staminaText.GetComponent<Text>().text = magazine + "/" + magazineCap;
         }
 
