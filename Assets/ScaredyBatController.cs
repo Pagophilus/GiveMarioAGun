@@ -11,18 +11,26 @@ namespace Platformer.Mechanics
     /// </summary>
     public class ScaredyBatController : EnemyController
     {
+        private Rigidbody2D body;
+
+        protected override void Awake()
+        {
+            body = gameObject.GetComponent<Rigidbody2D>();
+            base.Awake();
+        }
+
         protected override void Update()
         {
             float away = (transform.position.x > thePlayer.transform.position.x ? 3.0f : -3.0f);
             if (Vector2.Distance(thePlayer.transform.position, transform.position) < 6.0f)
             {
-                if (gameObject.GetComponent<Rigidbody2D>().velocity.x < 10.0f) {
-                    gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(away, 0.0f), ForceMode2D.Force);
+                if (Mathf.Abs(body.velocity.x) < 10.0f) {
+                    body.AddForce(new Vector2(away, 0.0f), ForceMode2D.Force);
                 } 
             }
             else
             {
-                gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(-away, 0.0f), ForceMode2D.Force);
+                body.AddForce(new Vector2(-away, 0.0f), ForceMode2D.Force);
             }
             base.Update();
         }

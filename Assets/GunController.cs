@@ -244,8 +244,7 @@ namespace Platformer.Mechanics
                 else if ((auto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0)) && fireCountDown <= 0.0f && magazine > 0)
                 {
                     StartCoroutine(shoot());
-                    //fireCountDown = 1.0f / fireRate;  <---BAD VERY BAD
-                    fireCountDown = 60.0f / fireRate; //<---GOOD VERY GOOD
+                    fireCountDown = 60.0f / fireRate;
                 }
                 fireCountDown -= Time.deltaTime;
             }

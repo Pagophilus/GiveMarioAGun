@@ -29,7 +29,7 @@ namespace Platformer.Mechanics
 
         protected float fireDelay = 1.0f;
 
-        void Awake()
+        protected virtual void Awake()
         {
             control = GetComponent<AnimationController>();
             _collider = GetComponent<Collider2D>();
