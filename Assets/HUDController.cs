@@ -45,7 +45,7 @@ namespace Platformer.Mechanics
             }
             gunsList.Clear(); 
            
-            for(int i = 0; i<player.guns.Length; i++) {
+            for(int i = 0; i < player.guns.Length; i++) {
 
                 GameObject newImage = Instantiate(imagePrefab, (Vector2)transform.position, Quaternion.identity, transform);
                 RectTransform rt = newImage.GetComponent<RectTransform>();
@@ -55,7 +55,18 @@ namespace Platformer.Mechanics
                 newImage.GetComponent<Image>().overrideSprite = player.guns[i].GetComponentInChildren<SpriteRenderer>().sprite;
 
                 gunsList.Add(newImage);
+            }
+            for (int i = 0; i < player.melees.Length; i++)
+            {
 
+                GameObject newImage = Instantiate(imagePrefab, (Vector2)transform.position, Quaternion.identity, transform);
+                RectTransform rt = newImage.GetComponent<RectTransform>();
+                rt.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 5, 75);
+                rt.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, -15 + (50 * (i + player.guns.Length)), 75);
+
+                newImage.GetComponent<Image>().overrideSprite = player.melees[i].GetComponentInChildren<SpriteRenderer>().sprite;
+
+                gunsList.Add(newImage);
             }
 
             GameObject newBorder = Instantiate(imagePrefab, (Vector2)transform.position, Quaternion.identity, transform);
@@ -63,7 +74,15 @@ namespace Platformer.Mechanics
             rtb.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 5, 110);
             rtb.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, -40 + (50 * player.gunIndex), 120);
             newBorder.GetComponent<Image>().overrideSprite = border;
+
+            GameObject meleeBorder = Instantiate(imagePrefab, (Vector2)transform.position, Quaternion.identity, transform);
+            RectTransform rtb2 = meleeBorder.GetComponent<RectTransform>();
+            rtb2.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 5, 110);
+            rtb2.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, -40 + (50 * (player.meleeIndex + player.guns.Length)), 120);
+            meleeBorder.GetComponent<Image>().overrideSprite = border;
+
             gunsList.Add(newBorder);
+            gunsList.Add(meleeBorder);
         }
 
         public void UpdateAmmo(int magazine, int magazineCap)

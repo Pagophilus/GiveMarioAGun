@@ -54,8 +54,10 @@ namespace Platformer.Mechanics
 
         
         private GameObject gun;
-
         public GameObject[] guns;
+
+        private GameObject melee;
+        public GameObject[] melees;
 
         Vector2 worldcoord;
 
@@ -67,6 +69,9 @@ namespace Platformer.Mechanics
         public Bounds Bounds => collider2d.bounds;
 
         public int gunIndex = 0;
+        public int meleeIndex = 0;
+
+        private bool meleeEquipped = false;
 
         void Awake()
         {
@@ -79,6 +84,7 @@ namespace Platformer.Mechanics
             hud = GameObject.Find("Hud").GetComponent<HUDController>();
             hud.UpdateHUD(this);
             gun = guns[gunIndex];
+            melee = melees[meleeIndex];
         }
 
         protected void Update()
@@ -105,13 +111,24 @@ namespace Platformer.Mechanics
                 {
                     spriteRenderer.flipX = true;
                 }
-                if (Input.GetMouseButtonDown(1))
+                /*if (Input.GetMouseButtonDown(1))
                 {
                     gun.SetActive(false);
                     gunIndex = (gunIndex + 1) % guns.Length;
                     gun = guns[gunIndex];
                     gun.SetActive(true);
                     hud.UpdateHUD(this);
+                }*/
+                if (Input.GetMouseButtonDown(0))
+                {
+                    meleeEquipped = false;
+                    gun.SetActive(true);
+                    melee.SetActive(false);
+                } else if (Input.GetMouseButtonDown(1))
+                {
+                    meleeEquipped = true;
+                    melee.SetActive(true);
+                    gun.SetActive(false);
                 }
             }
             UpdateJumpState();
@@ -160,7 +177,7 @@ namespace Platformer.Mechanics
                     {
                         Schedule<PlayerLanded>().player = this;
                         jumpState = JumpState.Landed;
-                        gun.GetComponent<GunController>().RefillAmmo();
+                        (meleeEquipped ? melee : gun).GetComponent<GunController>().RefillAmmo();
                         //Slam animation
                         Instantiate(slamObject, (Vector2)transform.position, Quaternion.identity);
                     }
@@ -268,7 +285,7 @@ namespace Platformer.Mechanics
         public void EnableControl(bool enabled)
         {
             controlEnabled = enabled;
-            gun.GetComponent<GunController>().setAlive(enabled);
+            (meleeEquipped ? melee : gun).GetComponent<GunController>().setAlive(enabled);
         }
     }
 }

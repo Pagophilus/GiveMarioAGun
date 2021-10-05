@@ -43,6 +43,7 @@ namespace Platformer.Mechanics
         private float fireCountDown = -1.0f;
         //Crosshair
         public GameObject crosshair;
+        public bool switched = false;
         //Gun Animation
         private Animator animator;
         private GameObject Animation;
@@ -72,6 +73,7 @@ namespace Platformer.Mechanics
 
         void OnEnable()
         {
+            switched = true;
             UpdateAmmo();
         }
 
@@ -177,7 +179,6 @@ namespace Platformer.Mechanics
                         yield return new WaitForSeconds(0.2f);
                         GetComponent<CapsuleCollider2D>().enabled = false;
                         rotationLocked = false;
-
                     }
                     else
                     {
@@ -221,9 +222,11 @@ namespace Platformer.Mechanics
                 }
                 crosshair.transform.position = worldcoord;
 
+                int button = (melee ? 1 : 0);
+
                 if (continuous)
                 {
-                    if (Input.GetMouseButton(0) && magazine > 0)
+                    if ((Input.GetMouseButton(button) || switched) && magazine > 0)
                     {
                         if (particles != null)
                         {
@@ -241,13 +244,14 @@ namespace Platformer.Mechanics
                         laserLine.enabled = false;
                     }
                 }
-                else if ((auto ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0)) && fireCountDown <= 0.0f && magazine > 0)
+                else if ((auto ? (Input.GetMouseButton(button) || switched) : (Input.GetMouseButtonDown(button) || switched)) && fireCountDown <= 0.0f && magazine > 0)
                 {
                     StartCoroutine(shoot());
                     fireCountDown = 60.0f / fireRate;
                 }
                 fireCountDown -= Time.deltaTime;
             }
+            switched = false;
         }
     }
 }
