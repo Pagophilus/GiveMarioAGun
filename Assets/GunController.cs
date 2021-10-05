@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static Platformer.Mechanics.BulletController;
 using static Platformer.Mechanics.PlayerController;
 using static Platformer.Mechanics.EnemyController;
@@ -37,9 +38,14 @@ namespace Platformer.Mechanics
         public bool hitscan = false;
         public bool continuous = false;
         public bool randomSpread = false;
+        public bool charge = false;
+        public float minCharge = 1.0f;
         public float beamLength = 50.0f;
         private LineRenderer laserLine;                                        // Reference to the LineRenderer component which will display our laserline
         private ParticleSystem particles;
+        private bool charging = false;
+        private float chargeTime = 0.0f;
+        public Image chargeImage;
 
         private float fireCountDown = -1.0f;
         //Crosshair
@@ -225,7 +231,34 @@ namespace Platformer.Mechanics
 
                 int button = (melee ? 1 : 0);
 
-                if (continuous)
+                if (charge)
+                {
+                    if (!charging)
+                    {
+                        if ((Input.GetMouseButtonDown(button) || switched) && fireCountDown <= 0.0f && magazine > 0)
+                        {
+                            charging = true;
+                            //chargeImage.enabled = true;
+                            chargeImage.fillAmount = 0.0f;
+                            chargeTime = 0.0f;
+                        }
+                    } else if (Input.GetMouseButton(button))
+                    {
+                        chargeTime += Time.deltaTime;
+                        chargeImage.fillAmount = 0.1f + 0.326f * (Mathf.Min(1.0f, chargeTime / minCharge));
+                    } else if (Input.GetMouseButtonUp(button))
+                    {
+                        if (chargeTime > minCharge)
+                        {
+                            pellets = (int)(chargeTime / minCharge);
+                            StartCoroutine(shoot());
+                            fireCountDown = 60.0f / fireRate;
+                        }
+                        charging = false;
+                        chargeImage.fillAmount = 0.0f;
+                    }
+                }
+                else if (continuous)
                 {
                     if ((Input.GetMouseButton(button) || switched) && magazine > 0)
                     {
