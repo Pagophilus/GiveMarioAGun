@@ -111,14 +111,38 @@ namespace Platformer.Mechanics
                 {
                     spriteRenderer.flipX = true;
                 }
-                /*if (Input.GetMouseButtonDown(1))
+                if (Input.mouseScrollDelta.y < 0 && !meleeEquipped)
                 {
                     gun.SetActive(false);
                     gunIndex = (gunIndex + 1) % guns.Length;
                     gun = guns[gunIndex];
                     gun.SetActive(true);
                     hud.UpdateHUD(this);
-                }*/
+                } else if (Input.mouseScrollDelta.y > 0 && !meleeEquipped)
+                {
+                    gun.SetActive(false);
+                    gunIndex = (gunIndex - 1 ) % guns.Length;
+                    gun = guns[gunIndex];
+                    gun.SetActive(true);
+                    hud.UpdateHUD(this);
+
+                } else if (Input.mouseScrollDelta.y < 0 && meleeEquipped)
+                {
+                    melee.SetActive(false);
+                    meleeIndex = (meleeIndex + 1) % melees.Length;
+                    melee = melees[meleeIndex];
+                    melee.SetActive(true);
+                    hud.UpdateHUD(this);
+
+                } else if (Input.mouseScrollDelta.y > 0 && meleeEquipped)
+                {
+                    melee.SetActive(false);
+                    meleeIndex = (meleeIndex - 1) % melees.Length;
+                    melee = melees[meleeIndex];
+                    gun.SetActive(true);
+                    hud.UpdateHUD(this);
+
+                }
                 if (Input.GetMouseButtonDown(0))
                 {
                     meleeEquipped = false;

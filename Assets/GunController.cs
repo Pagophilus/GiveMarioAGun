@@ -14,6 +14,7 @@ namespace Platformer.Mechanics
     {
         public GameObject bullet;
         public GameObject impactFX;
+        [SerializeField] private LayerMask layerMask;
 
         public int pellets = 5;
         public int burstCount = 1;
@@ -113,7 +114,7 @@ namespace Platformer.Mechanics
                 }
 
                 // Check if our raycast has hit anything
-                RaycastHit2D hit = Physics2D.Raycast(transform.position /*+ transform.up * 0.5f*/, transform.up, beamLength);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position /*+ transform.up * 0.5f*/, transform.up, beamLength, layerMask);
                 if (hit.collider != null)
                 {
                     //Debug.Log("hit found: " + hit.point.x + " " + hit.point.y + " " + hit.collider.gameObject.name);

@@ -126816,7 +126816,7 @@ PrefabInstance:
     - target: {fileID: 6502427989934358769, guid: 4d9d88fd569dfef40a1995c3fccbfbe1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6502427989934358771, guid: 4d9d88fd569dfef40a1995c3fccbfbe1,
         type: 3}
@@ -126843,6 +126843,11 @@ PrefabInstance:
         type: 3}
       propertyPath: magazineCap
       value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6502427989934358771, guid: 4d9d88fd569dfef40a1995c3fccbfbe1,
+        type: 3}
+      propertyPath: layerMask.m_Bits
+      value: 275
       objectReference: {fileID: 0}
     - target: {fileID: 6666569137577497361, guid: 4d9d88fd569dfef40a1995c3fccbfbe1,
         type: 3}
@@ -127482,6 +127487,11 @@ PrefabInstance:
         type: 3}
       propertyPath: hud
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114230831923080080, guid: 7d60c822c3f1b408ea7a00ecdb5e047a,
+        type: 3}
+      propertyPath: gunIndex
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114230831923080080, guid: 7d60c822c3f1b408ea7a00ecdb5e047a,
         type: 3}
@@ -128159,6 +128169,11 @@ PrefabInstance:
         type: 3}
       propertyPath: magazineCap
       value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6502427989934358771, guid: 36ac850fd7e825b409f9c96aa44791c3,
+        type: 3}
+      propertyPath: layerMask.m_Bits
+      value: 257
       objectReference: {fileID: 0}
     - target: {fileID: 6666569137577497361, guid: 36ac850fd7e825b409f9c96aa44791c3,
         type: 3}
@@ -137197,7 +137212,7 @@ PrefabInstance:
     - target: {fileID: 6502427989934358771, guid: 7d8cf6953d8a6f647a865895338e7947,
         type: 3}
       propertyPath: burstCount
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6502427989934358771, guid: 7d8cf6953d8a6f647a865895338e7947,
         type: 3}
@@ -140729,6 +140744,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ScaredyBat
+      objectReference: {fileID: 0}
+    - target: {fileID: 1661912868639658944, guid: d04ea31b3c12f15489916db498051edb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1702612949800919892, guid: d04ea31b3c12f15489916db498051edb,
         type: 3}
@@ -145227,7 +145247,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.1531706, y: 1}
+    m_SensorSize: {x: 1.6955836, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -147301,10 +147321,20 @@ PrefabInstance:
       propertyPath: crosshair
       value: 
       objectReference: {fileID: 3496584859862579821}
+    - target: {fileID: 1526181393462080124, guid: 44ac577a9cfa0b64e90b6fe046791d1d,
+        type: 3}
+      propertyPath: layerMask.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1526181393462080126, guid: 44ac577a9cfa0b64e90b6fe046791d1d,
         type: 3}
       propertyPath: m_Name
       value: Gun
+      objectReference: {fileID: 0}
+    - target: {fileID: 1526181393462080126, guid: 44ac577a9cfa0b64e90b6fe046791d1d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1526181393462080127, guid: 44ac577a9cfa0b64e90b6fe046791d1d,
         type: 3}
