@@ -45,7 +45,7 @@ namespace Platformer.Mechanics
         private ParticleSystem particles;
         private bool charging = false;
         private float chargeTime = 0.0f;
-        public Image chargeImage;
+        public GameObject chargeImage;
 
         private float fireCountDown = -1.0f;
         //Crosshair
@@ -239,23 +239,24 @@ namespace Platformer.Mechanics
                         {
                             charging = true;
                             //chargeImage.enabled = true;
-                            chargeImage.fillAmount = 0.0f;
+                            chargeImage.transform.localScale = new Vector3(0, 0, 0);
                             chargeTime = 0.0f;
                         }
                     } else if (Input.GetMouseButton(button))
                     {
                         chargeTime += Time.deltaTime;
-                        chargeImage.fillAmount = 0.1f + 0.326f * (Mathf.Min(1.0f, chargeTime / minCharge));
-                    } else if (Input.GetMouseButtonUp(button))
+                        chargeImage.transform.localScale = new Vector3(4, 4, 4) * Mathf.Min(1.0f, chargeTime / minCharge);
+                    }
+                    else if (Input.GetMouseButtonUp(button))
                     {
                         if (chargeTime > minCharge)
                         {
-                            pellets = (int)(chargeTime / minCharge);
+                            pellets = (int)(chargeTime * 5.0f / minCharge);
                             StartCoroutine(shoot());
                             fireCountDown = 60.0f / fireRate;
                         }
                         charging = false;
-                        chargeImage.fillAmount = 0.0f;
+                        chargeImage.transform.localScale = new Vector3(0, 0, 0);
                     }
                 }
                 else if (continuous)
