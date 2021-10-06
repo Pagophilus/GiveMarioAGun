@@ -23,7 +23,7 @@ namespace Platformer.Mechanics
         public float spread = 40.0f;
         public float recoil = 8.0f;
         public int magazineCap = 10;
-        private int magazine = 10;
+        protected int magazine = 10;
         public float bulletForce = 18;
         public float bulletForceVariance = 4;
 
@@ -44,7 +44,7 @@ namespace Platformer.Mechanics
         private LineRenderer laserLine;                                        // Reference to the LineRenderer component which will display our laserline
         private ParticleSystem particles;
         private bool charging = false;
-        private float chargeTime = 0.0f;
+        protected float chargeTime = 0.0f;
         public GameObject chargeImage;
 
         private float fireCountDown = -1.0f;
@@ -90,7 +90,7 @@ namespace Platformer.Mechanics
             UpdateAmmo();
         }
 
-        private void UpdateAmmo()
+        protected void UpdateAmmo()
         {
             if (melee)
             {
@@ -101,7 +101,7 @@ namespace Platformer.Mechanics
             }
         }
 
-        IEnumerator shoot()
+        public virtual IEnumerator shoot()
         {
             //gameObject.GetComponentInParent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
             magazine--;
@@ -238,7 +238,6 @@ namespace Platformer.Mechanics
                         if ((Input.GetMouseButtonDown(button) || switched) && fireCountDown <= 0.0f && magazine > 0)
                         {
                             charging = true;
-                            //chargeImage.enabled = true;
                             chargeImage.transform.localScale = new Vector3(0, 0, 0);
                             chargeTime = 0.0f;
                         }
