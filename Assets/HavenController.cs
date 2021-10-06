@@ -19,6 +19,7 @@ namespace Platformer.Mechanics
         {
             Debug.Log("ddd1 entering");
             timer.pause();
+            GameObject.Find("GameController").GetComponent<GameController>().model.spawnPoint = transform;
         }
 
         void OnTriggerExit2D(Collider2D collision)

@@ -93,6 +93,7 @@ namespace Platformer.Mechanics
 
         protected void UpdateAmmo()
         {
+            hud = GameObject.Find("Hud").GetComponent<HUDController>();
             if (melee)
             {
                 hud.UpdateStamina(magazine, magazineCap);

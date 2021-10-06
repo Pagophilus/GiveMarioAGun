@@ -13,6 +13,7 @@ namespace Platformer.Mechanics
     {
         public GameObject barrier;
         public GameObject egg;
+        public GameObject newHaven;
         private int phase = 1;
         public override void OnDamaged(int newHP, int oldHP)
         {
@@ -29,6 +30,10 @@ namespace Platformer.Mechanics
                     phase = 2;
                 }
                 //Instantiate(this, new Vector3(transform.position.x + 2 * (thePlayer.transform.position.x - transform.position.x), transform.position.y, transform.position.z), Quaternion.identity);
+            }
+            if (newHP <= 0 && oldHP > 0)
+            {
+                newHaven.SetActive(true);
             }
         }
 
