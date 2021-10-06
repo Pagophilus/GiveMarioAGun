@@ -188,7 +188,8 @@ namespace Platformer.Mechanics
                     {
                         Schedule<PlayerLanded>().player = this;
                         jumpState = JumpState.Landed;
-                        (meleeEquipped ? melee : gun).GetComponent<GunController>().RefillAmmo();
+                        melee.GetComponent<GunController>().RefillAmmo();
+                        gun.GetComponent<GunController>().RefillAmmo();
                         //Slam animation
                         Instantiate(slamObject, (Vector2)transform.position, Quaternion.identity);
                     }

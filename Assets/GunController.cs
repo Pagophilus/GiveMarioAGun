@@ -80,6 +80,7 @@ namespace Platformer.Mechanics
 
         void OnEnable()
         {
+            rotationLocked = false;
             switched = true;
             UpdateAmmo();
         }
