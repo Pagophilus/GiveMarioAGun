@@ -25,7 +25,7 @@ namespace Platformer.Mechanics
 
         protected override void Update()
         {
-            if (fireDelay < 0.0f && Vector2.Distance(thePlayer.transform.position, transform.position) < 6.0f)
+            if (fireDelay < 0.0f && Vector2.Distance(thePlayer.transform.position, transform.position) < 15.0f)
             {
                 if (Random.value < -0.2f)
                 {
@@ -41,12 +41,16 @@ namespace Platformer.Mechanics
                     fireAngle.Normalize();
                     GameObject o = Instantiate(bullet, transform.position, Quaternion.identity);
                     o.GetComponent<Rigidbody2D>().AddForce(fireAngle * launchSpeed, ForceMode2D.Impulse);
+                    o.transform.right = fireAngle;
                     for (int i = 1; i <= phase; i++)
                     {
                         o = Instantiate(bullet, transform.position, Quaternion.identity);
                         o.GetComponent<Rigidbody2D>().AddForce(Quaternion.Euler(0, 0, 15.0f * i) * fireAngle * launchSpeed, ForceMode2D.Impulse);
+                        o.transform.right = fireAngle;
                         o = Instantiate(bullet, transform.position, Quaternion.identity);
                         o.GetComponent<Rigidbody2D>().AddForce(Quaternion.Euler(0, 0, -15.0f * i) * fireAngle * launchSpeed, ForceMode2D.Impulse);
+                        o.transform.right = fireAngle;
+
                     }
                     fireDelay = 2.0f;
                 }

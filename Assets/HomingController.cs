@@ -14,28 +14,16 @@ public class HomingController : MonoBehaviour
         target = GameObject.Find("Player").transform;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-
-    /*    Vector2 direction = (Vector2)target.position - rigidBody.position;
-
-        direction.Normalize();
-
-        float rotateAmount = Vector3.Cross(direction, transform.up).z;
-        rigidBody.angularVelocity = -angleChangingSpeed * rotateAmount;
-        rigidBody.velocity = transform.up * movementSpeed;
-        Debug.Log("ddd 1 target " + rigidBody.velocity);*/
-
-        Vector2 direction = (target.transform.position - transform.position).normalized;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Debug.Log("ddd 1 target " + angle);
-
-  //       angle = Mathf.Clamp(angle, -Time.deltaTime * rotationSpeed, Time.deltaTime * rotationSpeed);
-        Debug.Log("ddd 2 target " + angle);
-
-        var rotateToTarget = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotateToTarget, 0.0000000000000000000001f);//Time.deltaTime * rotationSpeed);
-        rigidBody.velocity = new Vector2(direction.x * forwardSpeed, direction.y * forwardSpeed);
-
+        Vector2 direction = ((Vector2)target.position - rigidBody.position).normalized;
+        Vector2 forward = new Vector2(Mathf.Cos(rigidBody.rotation * Mathf.PI / 180.0f), Mathf.Sin(rigidBody.rotation * Mathf.PI / 180.0f));
+        float rotateAmount = Vector3.Cross(direction, forward).z;
+        if (rigidBody.velocity.magnitude > 12.0f)
+        {
+            rigidBody.AddForce(-1.0f * rigidBody.velocity, ForceMode2D.Force);
+        }
+        rigidBody.AddTorque(rotateAmount * -10.0f);
+        rigidBody.AddForce(forward * 20.0f, ForceMode2D.Force);
     }
 }
