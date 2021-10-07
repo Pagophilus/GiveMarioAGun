@@ -22,6 +22,27 @@ namespace Platformer.Mechanics
             timer = GameObject.Find("Timer").GetComponent<TimerController>();
         }
 
+        void OnTriggerEnter2D(Collider2D collision)
+        {
+            var player = collision.gameObject.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                Debug.Log("PlayerCollided " + collision.gameObject.name);
+                Vector2 dist = player.transform.position - transform.position;
+                dist.Normalize();
+                player.Bounce(0.8f * dist);
+                timer.Damage(damage);
+            }
+            if (explosion != null)
+            {
+                Instantiate(explosion, (Vector2)transform.position, Quaternion.identity);
+            }
+            if (destroyOnContact)
+            {
+                Destroy(gameObject);
+            }
+        }
+
         void OnCollisionEnter2D(Collision2D collision)
         {
             var player = collision.gameObject.GetComponent<PlayerController>();
