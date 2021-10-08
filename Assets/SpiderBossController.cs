@@ -31,23 +31,19 @@ namespace Platformer.Mechanics
             if (newHP <= 0 && oldHP > 0)
             {
                 newHaven.SetActive(true);
+                    gameObject.SetActive(false);
             }
         }
 
         protected override void Update()
         {
-            if (fireDelay < 0.0f && Vector2.Distance(thePlayer.transform.position, transform.position) < 6.0f)
+            if (fireDelay < 0.0f && Vector2.Distance(thePlayer.transform.position, transform.position) < 12.0f)
             {
                 float rand = Random.value;
                 if (rand < 0.2f)
                 {
-                    if (control.enabled)
-                    {
-                        control.enabled = false;
-                    } else
-                    {
-                        control.enabled = true;
-                    }
+                    Debug.Log("jumping");
+                    GetComponent<Rigidbody2D>().AddForce(new Vector2((thePlayer.transform.position.x - transform.position.x) * 0.4f, 10.0f) * 1.0f, ForceMode2D.Impulse);
                     fireDelay = 2.0f;
                 }
                 else
@@ -67,15 +63,14 @@ namespace Platformer.Mechanics
                 }
             }
             fireDelay -= Time.deltaTime;
-            if (path != null && control.enabled)
+            /*if (path != null)
             {
                 if (mover == null)
                 {
-                    mover = path.CreateMover(control.maxSpeed * 0.5f);
+                    mover = path.CreateMover(4.0f);
                 }
-                control.move.x = Mathf.Clamp(mover.Position.x - transform.position.x, -1, 1);
-                control.move.y = Mathf.Clamp(mover.Position.y - transform.position.y, -1, 1);
-            }
+                GetComponent<Rigidbody2D>().velocity = ((Vector3)mover.Position - transform.position).normalized * 10.0f;
+            }*/
         }
     }
 }

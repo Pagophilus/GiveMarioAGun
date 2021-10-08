@@ -12,10 +12,11 @@ namespace Platformer.Mechanics
         public GameObject imagePrefab;
         
         // TODO(grantcarlson): make this private.
-        public GameObject ammoText;
+        public GameObject ammoText, bossName;
         public GameObject staminaText;
         private GameObject newImage;
         public Image staminaBar, ammoBar;
+        public Image bossBar, bossFillBar;
         public GameObject timerText;
         public Sprite border;
 
@@ -24,6 +25,7 @@ namespace Platformer.Mechanics
         private void Awake()
         {
             ammoText = GameObject.Find("AmmoText");
+            bossName = GameObject.Find("BossName");
         }
 
         void Start()
@@ -35,6 +37,18 @@ namespace Platformer.Mechanics
         void Update()
         {
 
+        }
+
+        public void UpdateBossName(string name)
+        {
+            bossName.GetComponent<Text>().text = name;
+            bossBar.enabled = (name != "");
+            bossFillBar.enabled = (name != "");
+        }
+
+        public void UpdateBossHP(int hp, int maxHp)
+        {            
+            bossBar.fillAmount = (hp + 0.0f) / maxHp;
         }
 
         public void UpdateHUD(PlayerController player)

@@ -19,8 +19,13 @@ namespace Platformer.Mechanics
         private bool beamOn = false;
         private bool dead = false;
         public GameObject[] pillars;
+
+        private HUDController hud;
+
         public override void OnDamaged(int newHP, int oldHP)
         {
+            hud.UpdateBossHP(newHP, 100);
+
             if (newHP < 50 && oldHP >= 50)
             {
                 barrier.SetActive(true);
@@ -39,6 +44,19 @@ namespace Platformer.Mechanics
                 gameObject.SetActive(false);
             }
         }
+
+        void OnEnable()
+        {
+            hud = GameObject.Find("Hud").GetComponent<HUDController>();
+            hud.UpdateBossName("The Boss");
+            hud.UpdateBossHP(100, 100);
+        }
+
+        void OnDisable()
+        {
+            hud.UpdateBossName("");
+        }
+
         private IEnumerator ActivateBeam()
         {
             beam.SetActive(true);
@@ -111,10 +129,9 @@ namespace Platformer.Mechanics
             {
                 if (mover == null)
                 {
-                    mover = path.CreateMover(control.maxSpeed * 0.5f);
+                    mover = path.CreateMover(4.0f);
                 }
-                control.move.x = Mathf.Clamp(mover.Position.x - transform.position.x, -1, 1);
-                control.move.y = Mathf.Clamp(mover.Position.y - transform.position.y, -1, 1);
+                GetComponent<Rigidbody2D>().velocity = ((Vector3)mover.Position - transform.position).normalized * 10.0f;
             }
         }
     }

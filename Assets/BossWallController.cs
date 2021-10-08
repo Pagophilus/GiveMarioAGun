@@ -13,11 +13,14 @@ namespace Platformer.Mechanics
     /// </summary>
     public class BossWallController : MonoBehaviour
     {
-        public GameObject wall;
+        public GameObject[] walls;
         void OnTriggerEnter2D(Collider2D collision)
         {
             Debug.Log("triggered");
-            wall.SetActive(true);
+            foreach (GameObject g in walls)
+            {
+                g.SetActive(true);
+            }
         }
 
     }
