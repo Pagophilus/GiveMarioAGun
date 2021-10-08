@@ -12,6 +12,7 @@ namespace Platformer.Mechanics
         public GameObject player;
         private HUDController hud;
         private bool timerRunning = true;
+        private bool godMode = false;
 
         // Start is called before the first frame update
         void Start()
@@ -32,7 +33,12 @@ namespace Platformer.Mechanics
         // Update is called once per frame
         void Update()
         {
-            if (timerRunning)
+            if (Input.GetKeyDown("f"))
+            {
+                godMode = !godMode;
+            }
+            
+            if (timerRunning && !godMode)
             {
                 Damage(Time.deltaTime);
                 if (timeLeft <= 0)
@@ -46,7 +52,10 @@ namespace Platformer.Mechanics
 
         public void Damage(float damage)
         {
-            timeLeft -= damage;
+            if (!godMode)
+            {
+                timeLeft -= damage;
+            }
         }
     }
 }

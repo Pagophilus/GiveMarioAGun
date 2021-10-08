@@ -20,16 +20,13 @@ namespace Platformer.Mechanics
             Debug.Log("onDamaged " + (oldHP / 20) + " " + (newHP / 20));
             if (oldHP / 20 != newHP / 20)
             {
-                for (int i = -2; i < 2; i++)
+                for (int i = -3; i <= 3; i+=2)
                 {
                     Vector2 fireAngle = new Vector2(i, 1).normalized;
-                    //fireAngle.Normalize();
                     GameObject o = Instantiate(egg, transform.position, Quaternion.identity);
                     o.GetComponent<Rigidbody2D>().AddForce(fireAngle * launchSpeed, ForceMode2D.Impulse);
-                    //barrier.SetActive(true);
                     phase = 2;
                 }
-                //Instantiate(this, new Vector3(transform.position.x + 2 * (thePlayer.transform.position.x - transform.position.x), transform.position.y, transform.position.z), Quaternion.identity);
             }
             if (newHP <= 0 && oldHP > 0)
             {

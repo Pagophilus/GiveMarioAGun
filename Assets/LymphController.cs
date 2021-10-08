@@ -11,8 +11,10 @@ using static Platformer.Core.Simulation;
 
 namespace Platformer.Mechanics
 {
+
     public class LymphController : GunController
     {
+        public GameObject lockOn;
         [SerializeField] private LayerMask enemyLayer;
         public override IEnumerator shoot()
         {
@@ -24,6 +26,8 @@ namespace Platformer.Mechanics
                 {
                     magazine--;
                     UpdateAmmo();
+            
+                    Instantiate(lockOn, enemy.transform.position, Quaternion.identity);
                     transform.parent.GetComponent<Rigidbody2D>().AddForce(transform.up * -1.0f * recoil, ForceMode2D.Impulse);
                     GameObject o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.identity);
                     o.GetComponent<Rigidbody2D>().AddForce(fireAngle * (bulletForce + bulletForceVariance * Random.value), ForceMode2D.Impulse);

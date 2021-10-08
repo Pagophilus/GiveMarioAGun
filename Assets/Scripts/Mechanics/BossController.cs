@@ -17,7 +17,8 @@ namespace Platformer.Mechanics
         public GameObject beam;
         private int phase = 1;
         private bool beamOn = false;
-        public GameObject pillar;
+        private bool dead = false;
+        public GameObject[] pillars;
         public override void OnDamaged(int newHP, int oldHP)
         {
             if (newHP < 50 && oldHP >= 50)
@@ -30,10 +31,12 @@ namespace Platformer.Mechanics
             if (newHP <= 0 && oldHP > 0)
             {
                 newHaven.SetActive(true);
-                if(pillar != null)
+                dead = true;
+                foreach (GameObject pillar in pillars)
                 {
                     pillar.SetActive(false);
                 }
+                gameObject.SetActive(false);
             }
         }
         private IEnumerator ActivateBeam()
@@ -46,7 +49,7 @@ namespace Platformer.Mechanics
         }
         private IEnumerator StartSpawn()
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 8 && !dead; i++)
             {
                 if (i % 2 == 1 && phase == 2)
                 {

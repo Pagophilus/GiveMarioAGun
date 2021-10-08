@@ -14,19 +14,23 @@ namespace Platformer.Mechanics
     public class DelayedExplosionController : MonoBehaviour
     {
         public GameObject explosion;
+        public float lifespan = 1.0f;
 
         // Start is called before the first frame update
         void Awake()
         {
             StartCoroutine(Spawn());
-            Destroy(gameObject, 1.0f);
+            Destroy(gameObject,lifespan);
 
         }
 
         IEnumerator Spawn()
         {
             yield return new WaitForSeconds(0.8f);
-            Instantiate(explosion, transform.position, Quaternion.identity);
+            if (explosion)
+            {
+                Instantiate(explosion, transform.position, Quaternion.identity);
+            }
         }
     }
 }
