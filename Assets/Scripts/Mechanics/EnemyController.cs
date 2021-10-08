@@ -61,8 +61,6 @@ namespace Platformer.Mechanics
                     mover = path.CreateMover(4.0f);
                 }
                 GetComponent<Rigidbody2D>().velocity = ((Vector3) mover.Position - transform.position) / 10.0f;
- //               control.move.x = Mathf.Clamp(mover.Position.x - transform.position.x, -1, 1);
- //               control.move.y = Mathf.Clamp(mover.Position.y - transform.position.y, -1, 1);
             }
         }
     }

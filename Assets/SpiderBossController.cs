@@ -9,15 +9,12 @@ namespace Platformer.Mechanics
     /// <summary>
     /// A simple controller for enemies. Provides movement control over a patrol path.
     /// </summary>
-    public class SpiderBossController : EnemyController
+    public class SpiderBossController : BossController
     {
-        public GameObject barrier;
         public GameObject egg;
-        public GameObject newHaven;
         private int phase = 1;
         public override void OnDamaged(int newHP, int oldHP)
         {
-            Debug.Log("onDamaged " + (oldHP / 20) + " " + (newHP / 20));
             if (oldHP / 20 != newHP / 20)
             {
                 for (int i = -3; i <= 3; i+=2)
@@ -28,11 +25,7 @@ namespace Platformer.Mechanics
                     phase = 2;
                 }
             }
-            if (newHP <= 0 && oldHP > 0)
-            {
-                newHaven.SetActive(true);
-                    gameObject.SetActive(false);
-            }
+            base.OnDamaged(newHP, oldHP);
         }
 
         protected override void Update()
@@ -63,14 +56,6 @@ namespace Platformer.Mechanics
                 }
             }
             fireDelay -= Time.deltaTime;
-            /*if (path != null)
-            {
-                if (mover == null)
-                {
-                    mover = path.CreateMover(4.0f);
-                }
-                GetComponent<Rigidbody2D>().velocity = ((Vector3)mover.Position - transform.position).normalized * 10.0f;
-            }*/
         }
     }
 }
