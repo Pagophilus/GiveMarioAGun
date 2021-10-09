@@ -56,10 +56,10 @@ namespace Platformer.Mechanics
             if (currentHP == 0 && !dead)
             {
                 dead = true;
-                if (enemy != null)
+                if (enemy != null)  
                 {
                     timer.Damage(-10);
-                    Schedule<EnemyDeath>().enemy = enemy;
+                    //Schedule<EnemyDeath>().enemy = enemy;
                 }
                 else if (gameObject.GetComponent<PlayerController>())
                 {

@@ -39,7 +39,7 @@ namespace Platformer.Mechanics
         void OnEnable()
         {
             hud = GameObject.Find("Hud").GetComponent<HUDController>();
-            hud.UpdateBossName("The Boss");
+            hud.UpdateBossName(bossName);
             hud.UpdateBossHP(maxHP, maxHP);
         }
 

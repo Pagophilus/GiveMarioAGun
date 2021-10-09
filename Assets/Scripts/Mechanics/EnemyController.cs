@@ -40,6 +40,7 @@ namespace Platformer.Mechanics
             if (oldHP > 0 && newHP == 0 && deathEffect != null)
             {
                 Instantiate(deathEffect, transform.position, Quaternion.identity);
+                Destroy(gameObject);
             }
         }
 
