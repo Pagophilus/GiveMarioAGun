@@ -16,11 +16,16 @@ namespace Platformer.Mechanics
         protected Rigidbody2D body;
 
         SpriteRenderer spriteRenderer;
+        public float lifespan = -1.0f;
 
         void Awake()
         { 
             spriteRenderer = GetComponent<SpriteRenderer>();
             body = GetComponent<Rigidbody2D>();
+            if (lifespan > 0.0f)
+            {
+                Destroy(gameObject, lifespan);
+            }
         }
 
         protected void FixedUpdate()
