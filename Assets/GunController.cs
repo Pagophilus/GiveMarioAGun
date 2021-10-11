@@ -220,7 +220,7 @@ namespace Platformer.Mechanics
                 Vector2 worldcoord;
                 worldcoord.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
                 worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
-                if (!rotationLocked)
+                if (!rotationLocked && Time.deltaTime > 0)
                 {
                     GetComponentInChildren<SpriteRenderer>().flipY = (worldcoord.x > transform.position.x);
                     transform.rotation = Quaternion.Euler(0, 0, (worldcoord.x > transform.position.x ? 180 : 0) + 90 + 180 / Mathf.PI * (Mathf.Atan((transform.position.y - worldcoord.y) / (transform.position.x - worldcoord.x))));

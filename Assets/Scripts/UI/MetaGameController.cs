@@ -25,7 +25,11 @@ namespace Platformer.UI
         /// </summary>
         public GameController gameController;
 
+        public GameObject inventory;
+
         bool showMainCanvas = false;
+        bool showInventory = false;
+
 
         void OnEnable()
         {
@@ -61,11 +65,32 @@ namespace Platformer.UI
             this.showMainCanvas = show;
         }
 
+        void ShowInventory(bool show)
+        {
+            Debug.Log("ddd showing " + show);
+            if (show)
+            {
+                Time.timeScale = 0;
+                inventory.SetActive(true);
+                //foreach (var i in gamePlayCanvasii) i.gameObject.SetActive(false);
+            }
+            else
+            {
+                Time.timeScale = 1;
+                inventory.SetActive(false);
+                //foreach (var i in gamePlayCanvasii) i.gameObject.SetActive(true);
+            }
+            this.showInventory = show;
+        }
+
         void Update()
         {
             if (Input.GetButtonDown("Menu"))
             {
                 ToggleMainMenu(show: !showMainCanvas);
+            } else if (Input.GetKeyDown("e"))
+            {
+                ShowInventory(show: !showInventory);
             }
         }
 

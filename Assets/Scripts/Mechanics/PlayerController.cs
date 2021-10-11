@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Platformer.Gameplay;
+using UnityEngine.SceneManagement;
 using static Platformer.Core.Simulation;
 using Platformer.Model;
 using Platformer.Core;
@@ -100,16 +101,21 @@ namespace Platformer.Mechanics
                     stopJump = true;
                     Schedule<PlayerStopJump>().player = this;
                 }
-                Vector2 worldcoord;
-                worldcoord.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
-                worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
 
-                if (worldcoord.x > transform.position.x)
+                if (Time.deltaTime > 0)
                 {
-                    spriteRenderer.flipX = false;
-                } else
-                {
-                    spriteRenderer.flipX = true;
+                    Vector2 worldcoord;
+                    worldcoord.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+                    worldcoord.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
+
+                    if (worldcoord.x > transform.position.x)
+                    {
+                        spriteRenderer.flipX = false;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = true;
+                    }
                 }
 
                 if (Input.mouseScrollDelta.y != 0)
