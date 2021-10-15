@@ -199,7 +199,7 @@ namespace Platformer.Mechanics
                         for (int i = 0; i < pellets; i++)
                         {
                             fireAngle = Quaternion.Euler(0, 0, spread / 2.0f * (Random.value * 2 - 1)) * transform.up;
-                            o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.identity);
+                            o = Instantiate(bullet, transform.position + transform.up * 0.5f, Quaternion.LookRotation(transform.up));
                             o.GetComponent<Rigidbody2D>().AddForce(fireAngle * (bulletForce + bulletForceVariance * Random.value), ForceMode2D.Impulse);
                         }
                     }

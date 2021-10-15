@@ -22,6 +22,7 @@ namespace Platformer.Mechanics
         { 
             spriteRenderer = GetComponent<SpriteRenderer>();
             body = GetComponent<Rigidbody2D>();
+
             if (lifespan > 0.0f)
             {
                 Destroy(gameObject, lifespan);

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2816860982323066339}
   - component: {fileID: 7640881903637965242}
   - component: {fileID: 9080089167575400905}
+  - component: {fileID: -1031625146787054513}
   m_Layer: 7
   m_Name: PulseShot
   m_TagString: Player
@@ -178,4 +179,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosion: {fileID: 0}
   destroyOnContact: 0
+  ricochet: 0
   damage: 5
+--- !u!114 &-1031625146787054513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008275062895366250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 620d427fc43a9b748bd3ca6d8d576688, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.9
