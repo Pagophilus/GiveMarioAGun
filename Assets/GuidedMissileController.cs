@@ -15,7 +15,6 @@ public class GuidedMissileController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log("ddd " + target.position);
         Vector2 newDir = (target.position - transform.position).normalized;
         transform.right = newDir;// target.position - transform.position;
         rigidBody.velocity = newDir * 10.0f;

@@ -41,6 +41,7 @@ namespace Platformer.Mechanics
         {
             if (Input.GetMouseButtonDown(0))
             {
+                Debug.Log("ddd heart detonated ");
                 Instantiate(explosion, (Vector2)transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }

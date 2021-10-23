@@ -20,6 +20,7 @@ namespace Platformer.Mechanics
 
         void OnCollisionEnter2D(Collision2D collision)
         {
+            Debug.Log("ddd hit wall ");
             //collision.gameObject.GetComponent<EnemyController>();
             var enemyHealth = collision.gameObject.GetComponent<Health>();
             if (enemyHealth != null)

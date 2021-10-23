@@ -206,6 +206,18 @@ namespace Platformer.Mechanics
             }
         }
 
+        public void setGun(int index)
+        {
+            if (index != gunIndex)
+            {
+                gun.SetActive(false);
+                gunIndex = index;
+                gun = guns[gunIndex];
+                gun.SetActive(true);
+                hud.UpdateHUD(this);
+            }
+        }
+
         public enum JumpState
         {
             Grounded,
